@@ -1,0 +1,8 @@
+node_modules/
+.next/
+out/
+serve_static.py
+*.pyc
+.env
+.env.local
+.DS_Store

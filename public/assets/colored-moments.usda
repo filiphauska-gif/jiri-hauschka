@@ -1,0 +1,71 @@
+#usda 1.0
+(
+    defaultPrim = "Artwork"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Artwork"
+{
+    def Mesh "ColoredMomentsCanvas"
+    {
+        uniform token subdivisionScheme = "none"
+        float3[] extent = [(-0.5, -0.5, -0.025), (0.5, 0.5, 0.025)]
+        int[] faceVertexCounts = [4,4,4,4,4,4]
+        int[] faceVertexIndices = [
+            0,1,2,3,
+            4,5,6,7,
+            8,9,10,11,
+            12,13,14,15,
+            16,17,18,19,
+            20,21,22,23
+        ]
+        point3f[] points = [
+            (-0.5,-0.5,0.025),(0.5,-0.5,0.025),(0.5,0.5,0.025),(-0.5,0.5,0.025),
+            (0.5,-0.5,-0.025),(-0.5,-0.5,-0.025),(-0.5,0.5,-0.025),(0.5,0.5,-0.025),
+            (0.5,-0.5,0.025),(0.5,-0.5,-0.025),(0.5,0.5,-0.025),(0.5,0.5,0.025),
+            (-0.5,-0.5,-0.025),(-0.5,-0.5,0.025),(-0.5,0.5,0.025),(-0.5,0.5,-0.025),
+            (-0.5,0.5,0.025),(0.5,0.5,0.025),(0.5,0.5,-0.025),(-0.5,0.5,-0.025),
+            (-0.5,-0.5,-0.025),(0.5,-0.5,-0.025),(0.5,-0.5,0.025),(-0.5,-0.5,0.025)
+        ]
+        texCoord2f[] primvars:st = [
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1)
+        ] (
+            interpolation = "varying"
+        )
+        rel material:binding = </ArtworkMaterial>
+    }
+}
+
+def Material "ArtworkMaterial"
+{
+    token outputs:surface.connect = </ArtworkMaterial/PreviewSurface.outputs:surface>
+    def Shader "PreviewSurface"
+    {
+        uniform token info:id = "UsdPreviewSurface"
+        color3f inputs:diffuseColor.connect = </ArtworkMaterial/DiffuseTexture.outputs:rgb>
+        float inputs:roughness = 0.82
+        float inputs:metallic = 0
+        token outputs:surface
+    }
+    def Shader "DiffuseTexture"
+    {
+        uniform token info:id = "UsdUVTexture"
+        asset inputs:file = @colored-moments-texture.png@
+        token inputs:wrapS = "clamp"
+        token inputs:wrapT = "clamp"
+        float2 inputs:st.connect = </ArtworkMaterial/PrimvarReader.outputs:result>
+        token outputs:rgb
+    }
+    def Shader "PrimvarReader"
+    {
+        uniform token info:id = "UsdPrimvarReader_float2"
+        token inputs:varname = "st"
+        float2 outputs:result
+    }
+}
