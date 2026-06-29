@@ -3,7 +3,7 @@ import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { artworks, artworkBySlug } from '../lib/artworks';
 
-const PER_PAGE = 24;
+const PER_PAGE = 12;
 
 function QRCode({ url, size = 140 }) {
   return (
@@ -138,14 +138,16 @@ export default function HomePage() {
 
       <section className="ar" id="ar">
         <div className="wrap ar-panel">
-          <div className="ar-copy">
+          <div className="ar-left">
             <div className="kicker light">Augmented reality</div>
             <h2>View on your wall.</h2>
             <p>On mobile, visitors can place an artwork in their own space and see its real scale.</p>
-          </div>
-          <div className="ar-cta">
             <QRCode url="https://preview.jirihauschka.com/ar/colored-moments" />
             <Link className="btn primary mobile-only" href="/ar/colored-moments">Try AR preview</Link>
+          </div>
+          <div className="phone">
+            <img className="phone-room" src="/assets/ar-room.png" alt="Room" />
+            <img className="phone-art" src={artworkBySlug('colored-moments').image} alt="Artwork on wall" />
           </div>
         </div>
       </section>
