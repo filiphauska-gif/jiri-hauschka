@@ -1,9 +1,19 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { artworks, artworkBySlug } from '../lib/artworks';
 
 const PER_PAGE = 24;
+
+function QRCode({ url, size = 140 }) {
+  return (
+    <div className="qr-wrap">
+      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=${size}x${size}&data=${encodeURIComponent(url)}`}
+           alt="QR code" width={size} height={size} />
+      <span className="qr-label">Open on your phone to try AR</span>
+    </div>
+  );
+}
 
 export default function HomePage() {
   const [count, setCount] = useState(PER_PAGE);
@@ -18,6 +28,15 @@ export default function HomePage() {
 
   const closeLightbox = useCallback(() => setLightbox(null), []);
 
+  useEffect(() => {
+    if (lightbox) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => { document.body.style.overflow = ''; };
+  }, [lightbox]);
+
   return (
     <main>
       <nav className="nav">
@@ -28,13 +47,14 @@ export default function HomePage() {
             <a href="#bio">Bio</a>
             <Link href="/exhibitions">Exhibitions</Link>
             <a href="#ar">AR</a>
+            <a href="#instagram">Instagram</a>
             <a href="#contact">Contact</a>
           </div>
         </div>
       </nav>
 
       <header className="hero" id="top">
-        <div className="hero-bg"></div>
+        <div className="hero-bg" style={{backgroundImage: `url(${artworks[0].image})`}}></div>
         <div className="hero-inner">
           <div>
             <h1>Jiri<br />Hauschka</h1>
@@ -121,12 +141,24 @@ export default function HomePage() {
           <div className="ar-copy">
             <div className="kicker light">Augmented reality</div>
             <h2>View on your wall.</h2>
-            <p>On mobile, visitors can place an artwork in their own space and see its real scale through AR.</p>
-            <Link className="btn primary" href={`/ar/colored-moments`}>Try AR preview</Link>
+            <p>On mobile, visitors can place an artwork in their own space and see its real scale.</p>
           </div>
-          <div className="phone">
-            <img className="phone-room" src="/assets/ar-room.png" alt="Room" />
-            <img className="phone-art" src={artworkBySlug('colored-moments').image} alt="Artwork on wall" />
+          <div className="ar-cta">
+            <QRCode url="https://preview.jirihauschka.com/ar/colored-moments" />
+            <Link className="btn primary mobile-only" href="/ar/colored-moments">Try AR preview</Link>
+          </div>
+        </div>
+      </section>
+
+      <section id="instagram">
+        <div className="wrap">
+          <div className="card insta-card">
+            <h2>Instagram</h2>
+            <p className="insta-handle">@jirihauschka</p>
+            <div className="insta-grid">
+              <div className="insta-placeholder">Instagram feed loading…</div>
+            </div>
+            <a className="btn insta-btn" href="https://instagram.com/jirihauschka" target="_blank" rel="noopener">Follow on Instagram</a>
           </div>
         </div>
       </section>
