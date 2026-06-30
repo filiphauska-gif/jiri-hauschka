@@ -14,13 +14,8 @@ export default function ModelViewer({ artwork }) {
     <div className="model-container">
       <model-viewer
         src={artwork.glb}
-        ios-src={artwork.usdz}
         poster={artwork.poster || artwork.image}
         alt={`${artwork.title} by Jiri Hauschka`}
-        ar=""
-        ar-modes="webxr scene-viewer quick-look"
-        ar-placement="wall"
-        ar-scale="auto"
         camera-controls=""
         touch-action="pan-y"
         shadow-intensity="0.3"
