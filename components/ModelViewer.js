@@ -29,7 +29,7 @@ export default function ModelViewer({ artwork }) {
         ar=""
         ar-modes="webxr scene-viewer quick-look"
         ar-placement="wall"
-        ar-scale="fixed"
+        ar-scale="auto"
         camera-controls=""
         touch-action="pan-y"
         shadow-intensity="0.25"
