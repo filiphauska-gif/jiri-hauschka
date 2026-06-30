@@ -1,35 +1,39 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 export default function ModelViewer({ artwork }) {
   useEffect(() => {
-    import('@google/model-viewer').catch(err => console.error('MV error:', err));
+    // Pre-load model-viewer for the AR button functionality
+    import('@google/model-viewer').catch(() => {});
   }, []);
 
   return (
-    <model-viewer
-      src={artwork.glb}
-      ios-src={artwork.usdz}
-      poster={artwork.poster || artwork.image}
-      alt={`${artwork.title} by Jiri Hauschka`}
-      ar=""
-      ar-modes="webxr scene-viewer quick-look"
-      ar-placement="wall"
-      ar-scale="auto"
-      camera-controls=""
-      camera-orbit="0deg 0deg 1.5m"
-      touch-action="pan-y"
-      shadow-intensity="0.3"
-      exposure="1"
-      environment-image="neutral"
-      interaction-prompt="when-focused"
-      class="ar-model"
-    >
-      <button slot="ar-button" className="ar-ar-button">
-        <span className="ar-ar-icon">AR</span>
-        View on your wall
-      </button>
-    </model-viewer>
+    <div className="model-container">
+      <div className="model-poster-wrap">
+        <img
+          className="model-poster-img"
+          src={artwork.poster || artwork.image}
+          alt={artwork.title}
+        />
+      </div>
+
+      <model-viewer
+        src={artwork.glb}
+        ios-src={artwork.usdz}
+        poster={artwork.poster || artwork.image}
+        alt={`${artwork.title} by Jiri Hauschka`}
+        ar=""
+        ar-modes="webxr scene-viewer quick-look"
+        ar-placement="wall"
+        ar-scale="auto"
+        class="ar-model-hidden"
+      >
+        <button slot="ar-button" className="ar-ar-button">
+          <span className="ar-ar-icon">AR</span>
+          View on your wall
+        </button>
+      </model-viewer>
+    </div>
   );
 }
