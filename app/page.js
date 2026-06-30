@@ -2,6 +2,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { artworks, artworkBySlug } from '../lib/artworks';
+import InstagramFeed from '../components/InstagramFeed';
 
 const PER_PAGE = 12;
 
@@ -161,14 +162,7 @@ export default function HomePage() {
           <div className="card insta-card">
             <h2>Instagram</h2>
             <p className="insta-handle">@jirihauschka</p>
-            <div className="insta-frame-wrap">
-              <iframe
-                src="https://jirihauschka.com/instagram-feed/"
-                className="insta-frame"
-                title="Instagram feed"
-                loading="lazy"
-              ></iframe>
-            </div>
+            <InstagramFeed />
             <a className="btn insta-btn" href="https://instagram.com/jirihauschka" target="_blank" rel="noopener">Follow on Instagram</a>
           </div>
         </div>
