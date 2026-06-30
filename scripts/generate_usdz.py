@@ -106,7 +106,7 @@ def Material "ArtworkMaterial"
     
     with zipfile.ZipFile(out_path, 'w', zipfile.ZIP_DEFLATED) as zf:
         zf.writestr('model.usda', usda)
-        zf.writestr('texture.jpg', texture_bytes)
+        zf.writestr('texture.png', texture_bytes)
 
 def main():
     with open(ARTS, 'r', encoding='utf-8') as f:
