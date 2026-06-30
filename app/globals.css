@@ -123,8 +123,8 @@ section{padding:80px 0}
 
 /* AR Page */
 .ar-page{background:var(--bg);min-height:100vh}
-.ar-page-hero{background:var(--ink);color:white;padding:108px 0 60px}
-.ar-page-top{display:grid;grid-template-columns:1fr auto;gap:48px;align-items:center}
+.ar-page-hero{background:var(--ink);color:white;padding:108px 0 48px}
+.ar-page-top{max-width:var(--max);margin:0 auto;padding:0 22px}
 .ar-page-info{display:flex;flex-direction:column;gap:8px}
 .ar-page .kicker.light{margin-bottom:0}
 .ar-page h1{font-size:clamp(32px,4vw,52px);margin:0;font-weight:600;letter-spacing:-.03em}
@@ -168,8 +168,6 @@ section{padding:80px 0}
   .contact-email{font-size:20px}
   .card,.intro-card{padding:28px}
   .nav .links{display:none}
-  .ar-page-top{grid-template-columns:1fr;gap:24px}
-  .ar-page-links{flex-direction:row;flex-wrap:wrap}
   .ar-model{height:50vh;min-height:320px}
 }
 

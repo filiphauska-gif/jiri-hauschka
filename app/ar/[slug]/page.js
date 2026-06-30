@@ -35,11 +35,7 @@ export default async function ArtworkArPage({ params }) {
             <div className="kicker light">Augmented reality</div>
             <h1>{artwork.title}</h1>
             <div className="ar-meta">{artwork.year} · {artwork.medium}{artwork.size ? ` · ${artwork.size}` : ''}</div>
-            <p className="ar-hint">Open this page on a mobile device and tap the AR button. Use Safari on iPhone or Chrome on Android.</p>
-          </div>
-          <div className="ar-page-links">
-            <a className="btn primary" rel="ar" href={artwork.usdz}>Open on iPhone</a>
-            <a className="btn secondary" href={`intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(`https://preview.jirihauschka.com${artwork.glb}`)}&mode=ar_only&title=${encodeURIComponent(artwork.title)}#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;end;`}>Open on Android</a>
+            <p className="ar-hint">Tap the AR button below to place this painting on your wall.</p>
           </div>
         </div>
       </section>
