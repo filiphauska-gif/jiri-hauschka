@@ -51,7 +51,7 @@ export default function HomePage() {
             <a href="#works" onClick={() => setMenuOpen(false)}>Works</a>
             <a href="#bio" onClick={() => setMenuOpen(false)}>Bio</a>
             <Link href="/exhibitions" onClick={() => setMenuOpen(false)}>Exhibitions</Link>
-            <Link href="/ar/colored-moments" onClick={() => setMenuOpen(false)}>AR</Link>
+            <a href="#ar" onClick={() => setMenuOpen(false)}>AR</a>
             <a href="#instagram" onClick={() => setMenuOpen(false)}>Instagram</a>
             <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
           </div>

@@ -92,7 +92,7 @@ export default function ExhibitionsPage() {
             <Link href="/#works">Works</Link>
             <Link href="/#bio">Bio</Link>
             <span className="nav-active">Exhibitions</span>
-            <Link href="/ar/colored-moments">AR</Link>
+            <a href="/#ar">AR</a>
             <Link href="/#contact">Contact</Link>
           </div>
         </div>
