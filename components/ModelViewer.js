@@ -18,19 +18,6 @@ export default function ModelViewer({ artwork }) {
 
   return (
     <div className="model-container">
-      <div className="model-poster-wrap">
-        <img
-          className="model-poster-img"
-          src={artwork.poster || artwork.image}
-          alt={artwork.title}
-        />
-      </div>
-
-      <button className="ar-visual-button" onClick={handleAR}>
-        <span className="ar-ar-icon">AR</span>
-        View on your wall
-      </button>
-
       <model-viewer
         ref={mvRef}
         src={artwork.glb}
@@ -41,9 +28,19 @@ export default function ModelViewer({ artwork }) {
         ar-modes="webxr scene-viewer quick-look"
         ar-placement="wall"
         ar-scale="auto"
-        class="ar-model-hidden"
+        camera-controls=""
+        touch-action="pan-y"
+        shadow-intensity="0.3"
+        exposure="1.2"
+        interaction-prompt="none"
+        class="ar-model"
       >
-        <button slot="ar-button" className="ar-ar-button-hidden"></button>
+        <div slot="ar-button" className="ar-btn-wrapper">
+          <button className="ar-visual-button" onClick={handleAR}>
+            <span className="ar-ar-icon">AR</span>
+            View on your wall
+          </button>
+        </div>
       </model-viewer>
     </div>
   );
