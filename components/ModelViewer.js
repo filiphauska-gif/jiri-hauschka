@@ -33,8 +33,8 @@ export default function ModelViewer({ artwork }) {
     <div className="model-container">
       {isInApp && (
         <div className="inapp-banner">
-          <p>AR nefunguje v tomto prohlížeči. Otevři prosím v Safari.</p>
-          <button className="inapp-btn" onClick={openInSafari}>Otevřít v Safari</button>
+          <p>AR doesn't work in this browser. Please open in Safari.</p>
+          <button className="inapp-btn" onClick={openInSafari}>Open in Safari</button>
         </div>
       )}
 
