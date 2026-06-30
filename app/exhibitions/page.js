@@ -38,26 +38,19 @@ const groupExhibitions = [
 ];
 
 function ExhibitionGroup({ title, exhibitions }) {
-  const byYear = {};
-  exhibitions.forEach(ex => {
-    if (!byYear[ex.year]) byYear[ex.year] = [];
-    byYear[ex.year].push(ex);
-  });
-  const years = Object.keys(byYear).sort((a, b) => b - a);
+  const sorted = [...exhibitions].sort((a, b) => b.year - a.year);
 
   return (
     <div className="exhibition-group">
       <h2>{title}</h2>
-      {years.map(year => (
-        <div key={year} className="exhibition-year">
-          <span className="ex-year">{year}</span>
-          <div className="ex-list">
-            {byYear[year].map((ex, i) => (
-              <div key={i} className="ex-item">{ex.title}</div>
-            ))}
+      <div className="ex-list">
+        {sorted.map((ex, i) => (
+          <div key={i} className="ex-item">
+            <span className="ex-year">{ex.year}</span>
+            <span className="ex-title">{ex.title}</span>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }
