@@ -158,13 +158,13 @@ export default function HomePage() {
       </section>
 
       <section id="instagram">
-        <div className="wrap">
-          <div className="card insta-card">
-            <h2>Instagram</h2>
-            <p className="insta-handle">@jirihauschka</p>
-            <InstagramFeed />
-            <a className="btn insta-btn" href="https://instagram.com/jirihauschka" target="_blank" rel="noopener">Follow on Instagram</a>
-          </div>
+        <div className="wrap insta-section">
+          <h2>Instagram</h2>
+          <p className="insta-handle">@jirihauschka</p>
+          <InstagramFeed />
+          <a className="btn insta-brand-btn" href="https://instagram.com/jirihauschka" target="_blank" rel="noopener">
+            Follow on Instagram
+          </a>
         </div>
       </section>
 

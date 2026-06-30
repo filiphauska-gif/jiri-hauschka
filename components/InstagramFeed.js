@@ -1,43 +1,31 @@
 'use client';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function InstagramFeed() {
-  const containerRef = useRef(null);
-  const [loaded, setLoaded] = useState(false);
+  const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    if (loaded) return;
-
-    // Load the plugin CSS
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://jirihauschka.com/wp-content/plugins/instagram-feed/css/sbi-styles.min.css';
-    document.head.appendChild(link);
-
-    // Fetch the feed HTML from WordPress REST API
     fetch('https://jirihauschka.com/wp-json/wp/v2/pages/1706?_fields=content')
       .then(r => r.json())
       .then(data => {
-        if (containerRef.current) {
-          containerRef.current.innerHTML = data.content.rendered;
-        }
-        // Load the plugin JS to populate images
-        const script = document.createElement('script');
-        script.src = 'https://jirihauschka.com/wp-content/plugins/instagram-feed/js/sbi-scripts.min.js';
-        script.async = true;
-        script.onload = () => setLoaded(true);
-        document.body.appendChild(script);
+        const html = data.content.rendered;
+        const urls = [...html.matchAll(/data-full-res="([^"]+)"/g)].map(m => m[1].replace(/&#038;/g, '&').replace(/&amp;/g, '&'));
+        const links = [...html.matchAll(/class="sbi_photo" href="([^"]+)"/g)].map(m => m[1]);
+        const items = urls.slice(0, 5).map((url, i) => ({ url, link: links[i] || '#' }));
+        setPosts(items);
       })
-      .catch(() => {
-        if (containerRef.current) {
-          containerRef.current.innerHTML = '<p style="text-align:center;color:var(--muted);padding:40px">Instagram feed unavailable.</p>';
-        }
-      });
-  }, [loaded]);
+      .catch(() => setPosts([]));
+  }, []);
+
+  if (posts.length === 0) return null;
 
   return (
-    <div className="insta-feed-clean">
-      <div ref={containerRef}></div>
+    <div className="insta-feed-grid">
+      {posts.map((post, i) => (
+        <a key={i} href={post.link} target="_blank" rel="noopener noreferrer" className="insta-post">
+          <img src={post.url} alt={`Instagram post ${i + 1}`} loading="lazy" />
+        </a>
+      ))}
     </div>
   );
 }
