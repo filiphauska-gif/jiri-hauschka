@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Generate improved GLB models: correct aspect ratio, with frame."""
-import os, sys, io, re, json, struct, urllib.request, urllib.parse
+"""Generate GLBs: textured painting + white frame (using trimesh with separate materials)."""
+import os, sys, io, re, json, struct, urllib.request, urllib.parse, base64
 from PIL import Image
 import trimesh
 import numpy as np
@@ -15,75 +15,46 @@ def encode_url(url):
     return urllib.parse.urlunsplit(parsed)
 
 def download_image(url):
-    try:
-        encoded = encode_url(url)
-        req = urllib.request.Request(encoded, headers={'User-Agent': 'Mozilla/5.0'})
-        data = urllib.request.urlopen(req, timeout=30).read()
-        img = Image.open(io.BytesIO(data))
-        return img.convert('RGB')
-    except Exception as e:
-        print(f'    DL ERROR: {e}')
-        return None
+    encoded = encode_url(url)
+    req = urllib.request.Request(encoded, headers={'User-Agent': 'Mozilla/5.0'})
+    data = urllib.request.urlopen(req, timeout=30).read()
+    img = Image.open(io.BytesIO(data)).convert('RGB')
+    if max(img.size) > 2048:
+        ratio = 2048 / max(img.size)
+        img = img.resize((int(img.width * ratio), int(img.height * ratio)), Image.LANCZOS)
+    return img
 
-def create_glb_with_frame(img, out_path):
-    """Create a flat rectangle with image texture + thin frame"""
+def create_glb(img, out_path):
     w_px, h_px = img.size
-    # Normalize: max dimension = 1m, keep aspect ratio
-    max_dim = max(w_px, h_px)
-    w = w_px / max_dim  # width in meters
-    h = h_px / max_dim  # height in meters
-    
-    # Scale to a reasonable size (max ~1m for the longer side)
-    scale = 1.0 / max_dim
+    scale = 1.0 / max(w_px, h_px) * 0.9
     w, h = w_px * scale, h_px * scale
-    
-    frame_width = 0.015  # 1.5cm frame
-    frame_depth = 0.03   # 3cm frame depth
-    
+    fw, fd = 0.02, 0.04
     half_w, half_h = w / 2, h / 2
     
-    # --- Painting surface (flat plane) ---
-    verts = [
-        [-half_w, -half_h, 0],
-        [ half_w, -half_h, 0],
-        [ half_w,  half_h, 0],
-        [-half_w,  half_h, 0],
-    ]
-    faces = [[0, 1, 2], [0, 2, 3]]
-    uvs = [[0, 0], [1, 0], [1, 1], [0, 1]]
-    
-    mesh = trimesh.Trimesh(
-        vertices=np.array(verts, dtype=np.float32),
-        faces=np.array(faces, dtype=np.int64),
-    )
-    
-    # Save texture
+    # Save texture to PNG bytes
     buf = io.BytesIO()
-    img.save(buf, format='JPEG', quality=92)
-    buf.seek(0)
-    texture = Image.open(buf)
-    mesh.visual = trimesh.visual.TextureVisuals(
-        uv=np.array(uvs, dtype=np.float32),
-        image=texture
-    )
+    img.save(buf, format='PNG')
+    tex_data = buf.getvalue()
     
-    # --- Frame (4 sides) ---
-    fw = frame_width
-    fd = frame_depth
-    frame_verts = []
-    frame_faces = []
+    # --- Build raw GLTF ---
+    # Vertices: painting (4) + frame (32 = 4 boxes * 8 verts)
+    pv = [
+        [-half_w, -half_h, 0], [half_w, -half_h, 0],
+        [half_w, half_h, 0], [-half_w, half_h, 0]
+    ]
     
-    # Frame corners (outer and inner)
-    # Left side
-    l = -half_w - fw
-    r_outer = -half_w
-    r_inner = -half_w
-    # Actually let's do a simpler frame: just 4 thin boxes on each edge
+    fv = []
+    fi = []
     
-    def add_box(cx, cy, bw, bh, bd):
-        """Add a box at position, return vertex offset"""
-        offset = len(frame_verts)
+    def box(cx, cy, bw, bh, bd):
+        off = len(fv)
         hbw, hbh, hbd = bw/2, bh/2, bd/2
+        for dz in [-hbd, hbd]:
+            for dx in [-hbw, hbw]:
+                for dy in [-hbh, hbh]:
+                    # Need to order vertices for proper faces
+                    pass
+        # Simple box with 8 verts and 12 tris
         v = [
             [cx-hbw, cy-hbh, -hbd], [cx+hbw, cy-hbh, -hbd],
             [cx+hbw, cy+hbh, -hbd], [cx-hbw, cy+hbh, -hbd],
@@ -91,99 +62,139 @@ def create_glb_with_frame(img, out_path):
             [cx+hbw, cy+hbh, hbd], [cx-hbw, cy+hbh, hbd],
         ]
         f = [
-            [0,1,2],[0,2,3],[4,6,5],[4,7,6],
-            [0,4,5],[0,5,1],[1,5,6],[1,6,2],
-            [2,6,7],[2,7,3],[3,7,4],[3,4,0],
+            off, off+1, off+2,  off, off+2, off+3,
+            off+4, off+6, off+5,  off+4, off+7, off+6,
+            off, off+4, off+5,  off, off+5, off+1,
+            off+1, off+5, off+6,  off+1, off+6, off+2,
+            off+2, off+6, off+7,  off+2, off+7, off+3,
+            off+3, off+7, off+4,  off+3, off+4, off,
         ]
-        frame_verts.extend(v)
-        frame_faces.extend([[i+offset for i in tri] for tri in f])
-        return offset
+        fv.extend(v)
+        fi.extend(f)
     
-    # Top frame
-    add_box(0, half_h + fw/2, w + 2*fw, fw, fd)
-    # Bottom frame
-    add_box(0, -half_h - fw/2, w + 2*fw, fw, fd)
-    # Left frame
-    add_box(-half_w - fw/2, 0, fw, h, fd)
-    # Right frame
-    add_box(half_w + fw/2, 0, fw, h, fd)
+    box(0, half_h + fw/2, w + 2*fw, fw, fd)
+    box(0, -half_h - fw/2, w + 2*fw, fw, fd)
+    box(-half_w - fw/2, 0, fw, h, fd)
+    box(half_w + fw/2, 0, fw, h, fd)
     
-    if frame_verts:
-        frame_mesh = trimesh.Trimesh(
-            vertices=np.array(frame_verts, dtype=np.float32),
-            faces=np.array(frame_faces, dtype=np.int64),
-        )
-        # Dark brown frame color
-        frame_color = np.array([40, 30, 20, 255], dtype=np.uint8)
-        frame_mesh.visual = trimesh.visual.ColorVisuals(frame_mesh, vertex_colors=frame_color)
-        mesh = trimesh.util.concatenate([mesh, frame_mesh])
+    all_v = pv + fv
+    p_idx = [0, 1, 2, 0, 2, 3]
+    f_idx = [i + 4 for i in fi]
     
-    mesh.export(out_path, file_type='glb')
+    # Interleave: positions + UVs for painting, positions for frame
+    # Positions: all vertices (4 + 32 = 36)
+    pos_data = bytearray()
+    for v in all_v:
+        pos_data.extend(struct.pack('fff', *v))
     
-    # Post-process: fix material baseColorFactor to 1.0 (trimesh defaults to 0.4)
-    try:
-        with open(out_path, 'rb') as f:
-            data = f.read()
-        pos = 12
-        new_chunks = []
-        while pos < len(data):
-            chunk_len = struct.unpack('I', data[pos:pos+4])[0]
-            chunk_type = data[pos+4:pos+8]
-            chunk_data = data[pos+8:pos+8+chunk_len]
-            if chunk_type == b'JSON':
-                gltf = json.loads(chunk_data.decode('utf-8'))
-                for mat in gltf.get('materials', []):
-                    pbr = mat.get('pbrMetallicRoughness', {})
-                    if 'baseColorTexture' in pbr:
-                        pbr['baseColorFactor'] = [1.0, 1.0, 1.0, 1.0]
-                        pbr['metallicFactor'] = 0.0
-                        pbr['roughnessFactor'] = 0.9
-                    elif 'baseColorFactor' in pbr:
-                        pbr['baseColorFactor'] = [0.95, 0.93, 0.88, 1.0]
-                        pbr['metallicFactor'] = 0.0
-                        pbr['roughnessFactor'] = 0.8
-                chunk_data = json.dumps(gltf, separators=(',', ':')).encode('utf-8')
-            new_chunks.append((chunk_type, chunk_data))
-            pos += 8 + chunk_len
-        
-        new_data = b'glTF' + struct.pack('II', 2, 12)
-        for ct, cd in new_chunks:
-            new_data += struct.pack('I', len(cd)) + ct + cd
-        new_data = new_data[:8] + struct.pack('I', len(new_data)) + new_data[12:]
-        with open(out_path, 'wb') as f:
-            f.write(new_data)
-    except Exception as e:
-        print(f'Post-process error: {e}')
+    # UV data: only for painting (4 verts)
+    uv_data = bytearray()
+    for u in [[0,0],[1,0],[1,1],[0,1]]:
+        uv_data.extend(struct.pack('ff', *u))
+    
+    # Index data: painting (6) + frame
+    idx_data = bytearray()
+    for i in p_idx:
+        idx_data.extend(struct.pack('H', i))
+    for i in f_idx:
+        idx_data.extend(struct.pack('H', i))
+    
+    # Pad to 4 bytes
+    while len(pos_data) % 4: pos_data.append(0)
+    while len(uv_data) % 4: uv_data.append(0)
+    while len(idx_data) % 4: idx_data.append(0)
+    
+    # Buffer 0: positions + UVs + indices
+    buf0 = pos_data + uv_data + idx_data
+    
+    # Texture size
+    tex_b64 = base64.b64encode(tex_data).decode('ascii')
+    
+    pos_len = len(pos_data)
+    uv_len = len(uv_data)
+    idx_len = len(idx_data)
+    p_idx_count = len(p_idx)
+    f_idx_count = len(fi)
+    
+    gltf = {
+        "asset": {"version": "2.0", "generator": "hermes-ar"},
+        "scene": 0,
+        "scenes": [{"nodes": [0]}],
+        "nodes": [{"mesh": 0}],
+        "meshes": [{"primitives": [
+            {
+                "attributes": {"POSITION": 0, "TEXCOORD_0": 1},
+                "indices": 2, "material": 0
+            },
+            {
+                "attributes": {"POSITION": 0},
+                "indices": 3, "material": 1
+            }
+        ]}],
+        "accessors": [
+            {"bufferView": 0, "byteOffset": 0, "componentType": 5126, "count": len(all_v), "type": "VEC3"},
+            {"bufferView": 1, "byteOffset": 0, "componentType": 5126, "count": 4, "type": "VEC2"},
+            {"bufferView": 2, "byteOffset": 0, "componentType": 5123, "count": p_idx_count, "type": "SCALAR"},
+            {"bufferView": 2, "byteOffset": p_idx_count*2, "componentType": 5123, "count": f_idx_count, "type": "SCALAR"},
+        ],
+        "bufferViews": [
+            {"buffer": 0, "byteOffset": 0, "byteLength": pos_len, "target": 34962},
+            {"buffer": 0, "byteOffset": pos_len, "byteLength": uv_len, "target": 34962},
+            {"buffer": 0, "byteOffset": pos_len + uv_len, "byteLength": idx_len, "target": 34963},
+        ],
+        "textures": [{"source": 0, "sampler": 0}],
+        "images": [{"mimeType": "image/png", "uri": f"data:image/png;base64,{tex_b64}"}],
+        "samplers": [{"magFilter": 9729, "minFilter": 9987}],
+        "materials": [
+            {
+                "name": "Painting",
+                "pbrMetallicRoughness": {
+                    "baseColorTexture": {"index": 0},
+                    "baseColorFactor": [1.0, 1.0, 1.0, 1.0],
+                    "metallicFactor": 0.0, "roughnessFactor": 0.85
+                }
+            },
+            {
+                "name": "Frame",
+                "pbrMetallicRoughness": {
+                    "baseColorFactor": [0.95, 0.93, 0.88, 1.0],
+                    "metallicFactor": 0.0, "roughnessFactor": 0.7
+                }
+            }
+        ],
+        "buffers": [{"byteLength": len(buf0)}]
+    }
+    
+    json_bytes = json.dumps(gltf, separators=(',', ':')).encode('utf-8')
+    while len(json_bytes) % 4: json_bytes += b' '
+    while len(buf0) % 4: buf0.append(0)
+    
+    glb = b'glTF' + struct.pack('II', 2, 12)
+    glb += struct.pack('I', len(json_bytes)) + b'JSON' + json_bytes
+    glb += struct.pack('I', len(buf0)) + b'BIN' + bytes(buf0)
+    glb = glb[:8] + struct.pack('I', len(glb)) + glb[12:]
+    
+    with open(out_path, 'wb') as f:
+        f.write(glb)
 
 def main():
     with open(ARTS, 'r', encoding='utf-8') as f:
         content = f.read()
-    
     slugs = re.findall(r"slug:\s*'([^']+)'", content)
     images = re.findall(r"image:\s*'([^']+)'", content)
     
-    total = len(slugs)
-    ok = 0
-    
     for i, (slug, img_url) in enumerate(zip(slugs, images)):
-        glb_path = os.path.join(ASSETS, f'{slug}.glb')
-        
-        # Skip colored-moments (already has custom model)
         if slug == 'colored-moments':
-            print(f'  SKIP (custom): {slug}')
-            continue
-        
-        print(f'  [{i+1}/{total}] {slug}...', end=' ')
-        img = download_image(img_url)
-        if img is None:
-            print('FAIL (download)')
-            continue
-        
-        create_glb_with_frame(img, glb_path)
-        print(f'OK ({img.size[0]}x{img.size[1]})')
-        ok += 1
-    
-    print(f'\nDone: {ok} regenerated')
+            print(f'  SKIP: {slug}'); continue
+        glb_path = os.path.join(ASSETS, f'{slug}.glb')
+        print(f'  [{i+1}/47] {slug}...', end=' ')
+        try:
+            img = download_image(img_url)
+            create_glb(img, glb_path)
+            print(f'OK ({img.size[0]}x{img.size[1]})')
+        except Exception as e:
+            print(f'FAIL: {e}')
+            import traceback; traceback.print_exc()
 
 if __name__ == '__main__':
     main()
