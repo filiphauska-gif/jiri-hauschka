@@ -18,6 +18,7 @@ function QRCode({ url, size = 140 }) {
 export default function HomePage() {
   const [count, setCount] = useState(PER_PAGE);
   const [lightbox, setLightbox] = useState(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const visible = artworks.slice(0, count);
   const hasMore = count < artworks.length;
 
@@ -42,13 +43,16 @@ export default function HomePage() {
       <nav className="nav">
         <div className="nav-inner">
           <a href="#top" className="brand">Jiri Hauschka</a>
-          <div className="links">
-            <a href="#works">Works</a>
-            <a href="#bio">Bio</a>
-            <Link href="/exhibitions">Exhibitions</Link>
-            <a href="#ar">AR</a>
-            <a href="#instagram">Instagram</a>
-            <a href="#contact">Contact</a>
+          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
+            <span className={`hamburger-line ${menuOpen ? 'open' : ''}`}></span>
+          </button>
+          <div className={`links ${menuOpen ? 'links-open' : ''}`}>
+            <a href="#works" onClick={() => setMenuOpen(false)}>Works</a>
+            <a href="#bio" onClick={() => setMenuOpen(false)}>Bio</a>
+            <Link href="/exhibitions" onClick={() => setMenuOpen(false)}>Exhibitions</Link>
+            <a href="#ar" onClick={() => setMenuOpen(false)}>AR</a>
+            <a href="#instagram" onClick={() => setMenuOpen(false)}>Instagram</a>
+            <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
           </div>
         </div>
       </nav>
