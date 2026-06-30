@@ -34,14 +34,12 @@ export default function ModelViewer({ artwork }) {
         exposure="1.2"
         interaction-prompt="none"
         class="ar-model"
-      >
-        <div slot="ar-button" className="ar-btn-wrapper">
-          <button className="ar-visual-button" onClick={handleAR}>
-            <span className="ar-ar-icon">AR</span>
-            View on your wall
-          </button>
-        </div>
-      </model-viewer>
+      ></model-viewer>
+
+      <button className="ar-visual-button" onClick={handleAR}>
+        <span className="ar-ar-icon">AR</span>
+        View on your wall
+      </button>
     </div>
   );
 }
