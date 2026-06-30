@@ -20,14 +20,23 @@ export const metadata = {
     index: true,
     follow: true,
   },
-  alternates: {
-    canonical: 'https://preview.jirihauschka.com',
-  },
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+      <head>
+        <meta property="og:title" content="Jiri Hauschka — Czech Painter" />
+        <meta property="og:description" content="Contemporary Czech painter. Paintings between abstraction, figuration and magical realism." />
+        <meta property="og:url" content="https://jirihauschka.com" />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Jiri Hauschka" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Jiri Hauschka — Czech Painter" />
+        <meta name="twitter:description" content="Contemporary Czech painter. Paintings between abstraction, figuration and magical realism." />
+        <meta name="robots" content="index, follow" />
+        <link rel="canonical" href="https://preview.jirihauschka.com" />
+      </head>
       <body>{children}</body>
     </html>
   );
