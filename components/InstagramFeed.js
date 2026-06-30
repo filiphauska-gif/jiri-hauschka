@@ -11,7 +11,7 @@ export default function InstagramFeed() {
         const html = data.content.rendered;
         const urls = [...html.matchAll(/data-full-res="([^"]+)"/g)].map(m => m[1].replace(/&#038;/g, '&').replace(/&amp;/g, '&'));
         const links = [...html.matchAll(/class="sbi_photo" href="([^"]+)"/g)].map(m => m[1]);
-        const items = urls.slice(0, 5).map((url, i) => ({ url, link: links[i] || '#' }));
+        const items = urls.slice(0, 6).map((url, i) => ({ url, link: links[i] || '#' }));
         setPosts(items);
       })
       .catch(() => setPosts([]));

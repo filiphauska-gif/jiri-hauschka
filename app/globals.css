@@ -182,7 +182,7 @@ section{padding:80px 0}
   .lightbox-content{max-width:95vw}
   .lightbox-content img{max-height:60vh}
   .insta-grid{grid-template-columns:repeat(2,1fr)}
-  .insta-feed-grid{grid-template-columns:repeat(3,1fr);max-width:100%;gap:8px}
+  .insta-feed-grid{grid-template-columns:repeat(3,1fr);max-width:100%}
   .contact-email{font-size:20px}
   .card,.intro-card{padding:28px}
   .nav .links{display:none}
