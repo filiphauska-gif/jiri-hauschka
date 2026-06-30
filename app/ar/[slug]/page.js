@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { artworks } from '../../../lib/artworks';
 import ModelViewer from '../../../components/ModelViewer';
 import ArSelector from '../../../components/ArSelector';
+import Nav from '../../../components/Nav';
 
 export function generateStaticParams() {
   return artworks.filter((a) => a.ar).map((a) => ({ slug: a.slug }));
@@ -17,18 +18,7 @@ export default async function ArtworkArPage({ params }) {
 
   return (
     <main className="ar-page">
-      <nav className="nav">
-        <div className="nav-inner">
-          <Link href="/" className="brand">Jiri Hauschka</Link>
-          <div className="links">
-            <Link href="/#works">Works</Link>
-            <Link href="/#bio">Bio</Link>
-            <Link href="/exhibitions">Exhibitions</Link>
-            <span className="nav-active">AR</span>
-            <Link href="/#contact">Contact</Link>
-          </div>
-        </div>
-      </nav>
+      <Nav active="ar" />
 
       <section className="ar-page-hero">
         <div className="wrap ar-page-top">

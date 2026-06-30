@@ -1,8 +1,9 @@
 'use client';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { artworks, artworkBySlug } from '../lib/artworks';
 import InstagramFeed from '../components/InstagramFeed';
+import Nav from '../components/Nav';
 
 const PER_PAGE = 12;
 
@@ -19,16 +20,15 @@ function QRCode({ url, size = 140 }) {
 export default function HomePage() {
   const [count, setCount] = useState(PER_PAGE);
   const [lightbox, setLightbox] = useState(null);
-  const [menuOpen, setMenuOpen] = useState(false);
   const visible = artworks.slice(0, count);
   const hasMore = count < artworks.length;
 
-  const openLightbox = useCallback((slug) => {
+  const openLightbox = (slug) => {
     const art = artworkBySlug(slug);
     if (art) setLightbox(art);
-  }, []);
+  };
 
-  const closeLightbox = useCallback(() => setLightbox(null), []);
+  const closeLightbox = () => setLightbox(null);
 
   useEffect(() => {
     if (lightbox) {
@@ -41,23 +41,7 @@ export default function HomePage() {
 
   return (
     <main>
-      <nav className="nav">
-        <div className="nav-inner">
-          <a href="#top" className="brand">Jiri Hauschka</a>
-          <button className="hamburger" onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu">
-            <span className={`hamburger-line ${menuOpen ? 'open' : ''}`}></span>
-          </button>
-          <div className={`links ${menuOpen ? 'links-open' : ''}`}>
-            <a href="#works" onClick={() => setMenuOpen(false)}>Works</a>
-            <a href="#bio" onClick={() => setMenuOpen(false)}>Bio</a>
-            <Link href="/exhibitions" onClick={() => setMenuOpen(false)}>Exhibitions</Link>
-            <a href="#ar" onClick={() => setMenuOpen(false)}>AR</a>
-            <a href="#instagram" onClick={() => setMenuOpen(false)}>Instagram</a>
-            <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
-          </div>
-        </div>
-      </nav>
-
+      <Nav />
       <header className="hero" id="top">
         <div className="hero-bg" style={{backgroundImage: `url(${artworks[0].image})`}}></div>
         <div className="hero-inner">
