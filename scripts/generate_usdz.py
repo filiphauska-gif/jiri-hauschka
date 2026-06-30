@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate USDZ files matching the colored-moments structure."""
+"""Generate USDZ files matching colored-moments structure EXACTLY."""
 import os, io, zipfile, re, urllib.request, urllib.parse
 from PIL import Image
 
@@ -16,38 +16,41 @@ def download_image(url):
     encoded = encode_url(url)
     req = urllib.request.Request(encoded, headers={'User-Agent': 'Mozilla/5.0'})
     data = urllib.request.urlopen(req, timeout=30).read()
-    return data  # Keep raw bytes
+    return data
 
 def create_usdz(texture_bytes, out_path, w_px, h_px):
-    """Create USDZ matching colored-moments structure"""
+    """Create USDZ matching colored-moments EXACT structure"""
     max_dim = max(w_px, h_px)
-    w = w_px / max_dim * 0.9  # Scale to 0.9m max
+    w = w_px / max_dim * 0.9
     h = h_px / max_dim * 0.9
     hw, hh = w/2, h/2
-    d = 0.025  # depth like colored-moments
+    d = 0.025
     
-    # Box: 8 vertices, 12 triangles (6 quads split)
-    # Front: 0,1,2,3 (textured), Back: 4,5,6,7, etc.
+    # 6 quad faces, 4 separate vertices per face (24 total)
+    # Same vertex ordering as colored-moments
     pts = [
-        (-hw,-hh,d), (hw,-hh,d), (hw,hh,d), (-hw,hh,d),  # front (textured)
-        (hw,-hh,-d), (-hw,-hh,-d), (-hw,hh,-d), (hw,hh,-d),  # back
+        # front face (textured)
+        (-hw,-hh,d), (hw,-hh,d), (hw,hh,d), (-hw,hh,d),
+        # back face
+        (hw,-hh,-d), (-hw,-hh,-d), (-hw,hh,-d), (hw,hh,-d),
+        # right face
+        (hw,-hh,d), (hw,-hh,-d), (hw,hh,-d), (hw,hh,d),
+        # left face
+        (-hw,-hh,-d), (-hw,-hh,d), (-hw,hh,d), (-hw,hh,-d),
+        # top face
+        (-hw,hh,d), (hw,hh,d), (hw,hh,-d), (-hw,hh,-d),
+        # bottom face
+        (-hw,-hh,-d), (hw,-hh,-d), (hw,-hh,d), (-hw,-hh,d),
     ]
-    uv = [
-        (0,0),(1,0),(1,1),(0,1),
-        (1,0),(0,0),(0,1),(1,1),  # back UVs (mirrored)
-    ]
-    # Triangles for each quad face
-    faces = [
-        0,1,2, 0,2,3,  # front
-        4,7,6, 4,6,5,  # back
-        1,5,6, 1,6,2,  # right
-        0,4,7, 0,7,3,  # left
-        2,6,7, 2,7,3,  # top
-        0,1,5, 0,5,4,  # bottom
-    ]
+    
+    # UV coords: each face has full 0-1 UVs (same as colored-moments)
+    uv = [(0,0),(1,0),(1,1),(0,1)] * 6
     
     def fmt(v): return f"({v[0]:.6f},{v[1]:.6f},{v[2]:.6f})"
     def fmt2(v): return f"({v[0]:.6f},{v[1]:.6f})"
+    
+    pts_str = ','.join(fmt(p) for p in pts)
+    uv_str = ','.join(fmt2(u) for u in uv)
     
     usda = f'''#usda 1.0
 (
@@ -61,11 +64,11 @@ def Xform "Artwork"
     def Mesh "Canvas"
     {{
         uniform token subdivisionScheme = "none"
-        float3[] extent = [{fmt((-hw,-hh,-d))}, {fmt((hw,hh,d))}]
-        int[] faceVertexCounts = [{','.join(['3']*12)}]
-        int[] faceVertexIndices = [{','.join(str(i) for i in faces)}]
-        point3f[] points = [{','.join(fmt(p) for p in pts)}]
-        texCoord2f[] primvars:st = [{','.join(fmt2(u) for u in uv)}] (
+        float3[] extent = [({-hw:.6f},{-hh:.6f},{-d:.6f}), ({hw:.6f},{hh:.6f},{d:.6f})]
+        int[] faceVertexCounts = [4,4,4,4,4,4]
+        int[] faceVertexIndices = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+        point3f[] points = [{pts_str}]
+        texCoord2f[] primvars:st = [{uv_str}] (
             interpolation = "varying"
         )
         rel material:binding = </ArtworkMaterial>
@@ -118,23 +121,20 @@ def main():
             continue
         
         usdz_path = os.path.join(ASSETS, f'{slug}.usdz')
-        print(f'  [{i+1}/47] {slug}...', end=' ')
+        print(f'  [{i+1}] {slug}...', end=' ')
         
         try:
             data = download_image(img_url)
             img = Image.open(io.BytesIO(data))
             if max(img.size) > 2048:
-                ratio = 2048 / max(img.size)
-                img = img.resize((int(img.width*ratio), int(img.height*ratio)), Image.LANCZOS)
+                r = 2048 / max(img.size)
+                img = img.resize((int(img.width*r), int(img.height*r)), Image.LANCZOS)
             buf = io.BytesIO()
             img.save(buf, format='JPEG', quality=92)
-            tex_data = buf.getvalue()
-            
-            create_usdz(tex_data, usdz_path, img.width, img.height)
+            create_usdz(buf.getvalue(), usdz_path, img.width, img.height)
             print(f'OK ({img.width}x{img.height})')
         except Exception as e:
             print(f'FAIL: {e}')
-            import traceback; traceback.print_exc()
 
 if __name__ == '__main__':
     main()
