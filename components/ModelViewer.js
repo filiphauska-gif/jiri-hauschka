@@ -1,31 +1,23 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 export default function ModelViewer({ artwork }) {
-  const [isIOS, setIsIOS] = useState(false);
-
   useEffect(() => {
     import('@google/model-viewer').catch(() => {});
-    setIsIOS(/iphone|ipad|ipod/i.test(navigator.userAgent));
   }, []);
 
-  const glbUrl = `https://preview.jirihauschka.com${artwork.glb}`;
-  const srcUrl = artwork.usdz
-    ? `https://preview.jirihauschka.com${artwork.usdz}`
-    : glbUrl;
-
-  const sceneViewerUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glbUrl)}&mode=ar_only&title=${encodeURIComponent(artwork.title)}#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;end;`;
+  const hasUsdz = artwork.usdz && artwork.usdz !== artwork.glb;
 
   return (
     <div className="model-container">
       <model-viewer
         src={artwork.glb}
-        ios-src={artwork.usdz}
+        ios-src={hasUsdz ? artwork.usdz : undefined}
         poster={artwork.poster || artwork.image}
         alt={`${artwork.title} by Jiri Hauschka`}
         ar=""
-        ar-modes="webxr scene-viewer quick-look"
+        ar-modes={hasUsdz ? "webxr scene-viewer quick-look" : "webxr scene-viewer"}
         ar-placement="wall"
         ar-scale="auto"
         camera-controls=""
@@ -34,19 +26,12 @@ export default function ModelViewer({ artwork }) {
         exposure="1.2"
         interaction-prompt="none"
         class="ar-model"
-      ></model-viewer>
-
-      {isIOS ? (
-        <a className="ar-visual-button" rel="ar" href={srcUrl}>
+      >
+        <button slot="ar-button" className="ar-visual-button">
           <span className="ar-ar-icon">AR</span>
           View on your wall
-        </a>
-      ) : (
-        <a className="ar-visual-button" href={sceneViewerUrl}>
-          <span className="ar-ar-icon">AR</span>
-          View on your wall
-        </a>
-      )}
+        </button>
+      </model-viewer>
     </div>
   );
 }
