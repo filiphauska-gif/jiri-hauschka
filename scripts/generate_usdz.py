@@ -89,7 +89,7 @@ def Material "ArtworkMaterial"
     def Shader "DiffuseTexture"
     {{
         uniform token info:id = "UsdUVTexture"
-        asset inputs:file = @texture.jpg@
+        asset inputs:file = @texture.png@
         token inputs:wrapS = "clamp"
         token inputs:wrapT = "clamp"
         float2 inputs:st.connect = </ArtworkMaterial/PrimvarReader.outputs:result>
@@ -130,7 +130,7 @@ def main():
                 r = 2048 / max(img.size)
                 img = img.resize((int(img.width*r), int(img.height*r)), Image.LANCZOS)
             buf = io.BytesIO()
-            img.save(buf, format='JPEG', quality=92)
+            img.save(buf, format='PNG')
             create_usdz(buf.getvalue(), usdz_path, img.width, img.height)
             print(f'OK ({img.width}x{img.height})')
         except Exception as e:
