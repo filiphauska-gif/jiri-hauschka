@@ -7,27 +7,29 @@ export default function ModelViewer({ artwork }) {
     import('@google/model-viewer').catch(() => {});
   }, []);
 
-  const glbUrl = `https://preview.jirihauschka.com${artwork.glb}`;
-  const usdzUrl = artwork.usdz ? `https://preview.jirihauschka.com${artwork.usdz}` : glbUrl;
-
   return (
     <div className="model-container">
       <model-viewer
         src={artwork.glb}
+        ios-src={artwork.usdz}
         poster={artwork.poster || artwork.image}
         alt={`${artwork.title} by Jiri Hauschka`}
+        ar=""
+        ar-modes="webxr scene-viewer quick-look"
+        ar-placement="wall"
+        ar-scale="auto"
         camera-controls=""
         touch-action="pan-y"
         shadow-intensity="0.3"
         exposure="1.2"
         interaction-prompt="none"
         class="ar-model"
-      ></model-viewer>
-
-      <a className="ar-visual-button" rel="ar" href={usdzUrl}>
-        <span className="ar-ar-icon">AR</span>
-        View on your wall
-      </a>
+      >
+        <button slot="ar-button" className="ar-visual-button">
+          <span className="ar-ar-icon">AR</span>
+          View on your wall
+        </button>
+      </model-viewer>
     </div>
   );
 }
