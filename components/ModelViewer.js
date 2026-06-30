@@ -1,12 +1,18 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function ModelViewer({ artwork }) {
   const mvRef = useRef(null);
+  const [isInApp, setIsInApp] = useState(false);
 
   useEffect(() => {
     import('@google/model-viewer').catch(() => {});
+    const ua = navigator.userAgent;
+    // Detect Facebook, Messenger, Instagram in-app browsers
+    if (/FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger/i.test(ua)) {
+      setIsInApp(true);
+    }
   }, []);
 
   const handleAR = () => {
@@ -16,8 +22,22 @@ export default function ModelViewer({ artwork }) {
     }
   };
 
+  const openInSafari = () => {
+    // Try to open current URL in Safari
+    const url = window.location.href;
+    // iOS scheme to open Safari
+    window.location.href = url.replace(/^https:\/\//, 'x-safari-https://');
+  };
+
   return (
     <div className="model-container">
+      {isInApp && (
+        <div className="inapp-banner">
+          <p>AR nefunguje v tomto prohlížeči. Otevři prosím v Safari.</p>
+          <button className="inapp-btn" onClick={openInSafari}>Otevřít v Safari</button>
+        </div>
+      )}
+
       <model-viewer
         ref={mvRef}
         src={artwork.glb}

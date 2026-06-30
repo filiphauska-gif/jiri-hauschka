@@ -151,6 +151,9 @@ section{padding:80px 0}
 .ar-visual-button{display:inline-flex;align-items:center;gap:10px;background:#0071e3;color:white;border:none;padding:14px 32px;border-radius:40px;font-size:16px;font-weight:500;cursor:pointer;transition:all .2s}
 .ar-visual-button:hover{background:#0066cc}
 .ar-ar-icon{background:rgba(255,255,255,.2);border-radius:6px;padding:2px 6px;font-size:11px;font-weight:700;letter-spacing:.05em}
+.inapp-banner{background:rgba(255,200,0,.15);border:1px solid rgba(255,200,0,.3);border-radius:var(--small-radius,14px);padding:16px 20px;text-align:center;width:100%}
+.inapp-banner p{font-size:14px;color:rgba(255,255,255,.8);margin:0 0 12px}
+.inapp-btn{background:#0071e3;color:white;border:none;padding:10px 24px;border-radius:20px;font-size:14px;font-weight:500;cursor:pointer}
 .ar-desktop-hint{font-size:14px;color:rgba(255,255,255,.5);text-align:center;margin:0}
 .ar-actions{display:flex;gap:12px;justify-content:center}
 .ar-footer{padding:40px 0}
