@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-"""Generate GLB 3D models for all artworks from their images."""
-import os, sys, json, re, math, io, urllib.request
+"""Generate improved GLB models: correct aspect ratio, with frame."""
+import os, sys, io, re, urllib.request, urllib.parse
 from PIL import Image
 import trimesh
 import numpy as np
@@ -9,125 +9,146 @@ BASE = r'C:\Users\Hauska\jiri-hauschka-next'
 ARTS = os.path.join(BASE, 'lib', 'artworks.js')
 ASSETS = os.path.join(BASE, 'public', 'assets')
 
-def parse_size(size_str):
-    """Parse '150 × 200 cm' -> (150, 200) in cm, or default 1:1"""
-    if not size_str:
-        return (1.0, 1.0)
-    m = re.search(r'(\d+)\s*[×x]\s*(\d+)', size_str)
-    if m:
-        w, h = float(m.group(1)), float(m.group(2))
-        # Normalize: keep ratio but max dimension = 1 meter (100cm)
-        scale = max(w, h) / 100
-        return (w / 100 / scale, h / 100 / scale)
-    return (1.0, 1.0)
+def encode_url(url):
+    parsed = list(urllib.parse.urlsplit(url))
+    parsed[2] = urllib.parse.quote(urllib.parse.unquote(parsed[2]), safe='/:@!$&\'()*+,;=-._~%')
+    return urllib.parse.urlunsplit(parsed)
 
-def download_image(url, max_size=1024):
-    """Download image, resize if needed"""
+def download_image(url):
     try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        encoded = encode_url(url)
+        req = urllib.request.Request(encoded, headers={'User-Agent': 'Mozilla/5.0'})
         data = urllib.request.urlopen(req, timeout=30).read()
         img = Image.open(io.BytesIO(data))
-        # Resize if too large (keep aspect ratio)
-        if max(img.size) > max_size:
-            ratio = max_size / max(img.size)
-            img = img.resize((int(img.width * ratio), int(img.height * ratio)), Image.LANCZOS)
-        return img
+        return img.convert('RGB')
     except Exception as e:
-        print(f'  Download failed: {e}')
+        print(f'    DL ERROR: {e}')
         return None
 
-def create_glb(image_url, out_path, real_w, real_h):
-    """Create a GLB file: flat rectangle with image texture"""
-    img = download_image(image_url)
-    if img is None:
-        return False
+def create_glb_with_frame(img, out_path):
+    """Create a flat rectangle with image texture + thin frame"""
+    w_px, h_px = img.size
+    # Normalize: max dimension = 1m, keep aspect ratio
+    max_dim = max(w_px, h_px)
+    w = w_px / max_dim  # width in meters
+    h = h_px / max_dim  # height in meters
     
-    # Use real-world proportions but cap at 1m
-    max_dim = max(real_w, real_h)
-    if max_dim == 0:
-        max_dim = 1
-    w = real_w / max_dim
-    h = real_h / max_dim
+    # Scale to a reasonable size (max ~1m for the longer side)
+    scale = 1.0 / max_dim
+    w, h = w_px * scale, h_px * scale
     
-    # Create a flat rectangular mesh (XY plane, facing +Z)
+    frame_width = 0.015  # 1.5cm frame
+    frame_depth = 0.03   # 3cm frame depth
+    
     half_w, half_h = w / 2, h / 2
-    vertices = np.array([
+    
+    # --- Painting surface (flat plane) ---
+    verts = [
         [-half_w, -half_h, 0],
         [ half_w, -half_h, 0],
         [ half_w,  half_h, 0],
         [-half_w,  half_h, 0],
-    ], dtype=np.float32)
+    ]
+    faces = [[0, 1, 2], [0, 2, 3]]
+    uvs = [[0, 0], [1, 0], [1, 1], [0, 1]]
     
-    faces = np.array([
-        [0, 1, 2],
-        [0, 2, 3],
-    ], dtype=np.int64)
-    
-    # UV coordinates (texture mapping)
-    uvs = np.array([
-        [0, 0], [1, 0], [1, 1], [0, 1]
-    ], dtype=np.float32)
-    
-    # Save texture as PNG in memory
-    buf = io.BytesIO()
-    img.save(buf, format='PNG')
-    buf.seek(0)
-    texture = Image.open(buf)
-    
-    # Create mesh with material
     mesh = trimesh.Trimesh(
-        vertices=vertices,
-        faces=faces,
+        vertices=np.array(verts, dtype=np.float32),
+        faces=np.array(faces, dtype=np.int64),
     )
     
-    # Add UV coordinates
-    mesh.visual = trimesh.visual.TextureVisuals(uv=uvs, image=texture)
+    # Save texture
+    buf = io.BytesIO()
+    img.save(buf, format='JPEG', quality=92)
+    buf.seek(0)
+    texture = Image.open(buf)
+    mesh.visual = trimesh.visual.TextureVisuals(
+        uv=np.array(uvs, dtype=np.float32),
+        image=texture
+    )
     
-    # Export as GLB
+    # --- Frame (4 sides) ---
+    fw = frame_width
+    fd = frame_depth
+    frame_verts = []
+    frame_faces = []
+    
+    # Frame corners (outer and inner)
+    # Left side
+    l = -half_w - fw
+    r_outer = -half_w
+    r_inner = -half_w
+    # Actually let's do a simpler frame: just 4 thin boxes on each edge
+    
+    def add_box(cx, cy, bw, bh, bd):
+        """Add a box at position, return vertex offset"""
+        offset = len(frame_verts)
+        hbw, hbh, hbd = bw/2, bh/2, bd/2
+        v = [
+            [cx-hbw, cy-hbh, -hbd], [cx+hbw, cy-hbh, -hbd],
+            [cx+hbw, cy+hbh, -hbd], [cx-hbw, cy+hbh, -hbd],
+            [cx-hbw, cy-hbh, hbd], [cx+hbw, cy-hbh, hbd],
+            [cx+hbw, cy+hbh, hbd], [cx-hbw, cy+hbh, hbd],
+        ]
+        f = [
+            [0,1,2],[0,2,3],[4,6,5],[4,7,6],
+            [0,4,5],[0,5,1],[1,5,6],[1,6,2],
+            [2,6,7],[2,7,3],[3,7,4],[3,4,0],
+        ]
+        frame_verts.extend(v)
+        frame_faces.extend([[i+offset for i in tri] for tri in f])
+        return offset
+    
+    # Top frame
+    add_box(0, half_h + fw/2, w + 2*fw, fw, fd)
+    # Bottom frame
+    add_box(0, -half_h - fw/2, w + 2*fw, fw, fd)
+    # Left frame
+    add_box(-half_w - fw/2, 0, fw, h, fd)
+    # Right frame
+    add_box(half_w + fw/2, 0, fw, h, fd)
+    
+    if frame_verts:
+        frame_mesh = trimesh.Trimesh(
+            vertices=np.array(frame_verts, dtype=np.float32),
+            faces=np.array(frame_faces, dtype=np.int64),
+        )
+        # Dark brown frame color
+        frame_color = np.array([40, 30, 20, 255], dtype=np.uint8)
+        frame_mesh.visual = trimesh.visual.ColorVisuals(frame_mesh, vertex_colors=frame_color)
+        mesh = trimesh.util.concatenate([mesh, frame_mesh])
+    
     mesh.export(out_path, file_type='glb')
-    return True
 
 def main():
-    # Read artworks
     with open(ARTS, 'r', encoding='utf-8') as f:
         content = f.read()
     
     slugs = re.findall(r"slug:\s*'([^']+)'", content)
-    titles = re.findall(r"title:\s*'([^']+)'", content)
     images = re.findall(r"image:\s*'([^']+)'", content)
-    sizes = re.findall(r"size:\s*'([^']*)'", content)
-    ar_flags = re.findall(r"ar:\s*(true|false)", content)
     
     total = len(slugs)
     ok = 0
-    skip = 0
     
-    for i, (slug, title, img_url, size_str, ar) in enumerate(zip(slugs, titles, images, sizes, ar_flags)):
-        if ar == 'true':
-            print(f'  SKIP (already has AR): {slug}')
-            skip += 1
-            continue
-        
+    for i, (slug, img_url) in enumerate(zip(slugs, images)):
         glb_path = os.path.join(ASSETS, f'{slug}.glb')
         
-        # Skip if already exists
-        if os.path.exists(glb_path):
-            print(f'  SKIP (exists): {slug}')
-            skip += 1
+        # Skip colored-moments (already has custom model)
+        if slug == 'colored-moments':
+            print(f'  SKIP (custom): {slug}')
             continue
         
-        real_w, real_h = parse_size(size_str)
-        if real_w == 0 or real_h == 0:
-            real_w, real_h = 1.0, 1.0
+        print(f'  [{i+1}/{total}] {slug}...', end=' ')
+        img = download_image(img_url)
+        if img is None:
+            print('FAIL (download)')
+            continue
         
-        print(f'  [{i+1}/{total}] {slug} ({real_w:.2f}x{real_h:.2f}m)')
-        
-        if create_glb(img_url, glb_path, real_w, real_h):
-            ok += 1
-        else:
-            print(f'    FAILED')
+        create_glb_with_frame(img, glb_path)
+        print(f'OK ({img.size[0]}x{img.size[1]})')
+        ok += 1
     
-    print(f'\nDone: {ok} created, {skip} skipped, {total} total')
+    print(f'\nDone: {ok} regenerated')
 
 if __name__ == '__main__':
     main()
