@@ -1,23 +1,25 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function ModelViewer({ artwork }) {
+  const [isMobile, setIsMobile] = useState(false);
+
   useEffect(() => {
     import('@google/model-viewer').catch(() => {});
+    const ua = navigator.userAgent;
+    setIsMobile(/iphone|ipad|ipod|android/i.test(ua));
   }, []);
-
-  const hasUsdz = artwork.usdz && artwork.usdz !== artwork.glb;
 
   return (
     <div className="model-container">
       <model-viewer
         src={artwork.glb}
-        ios-src={hasUsdz ? artwork.usdz : undefined}
+        ios-src={artwork.usdz}
         poster={artwork.poster || artwork.image}
         alt={`${artwork.title} by Jiri Hauschka`}
         ar=""
-        ar-modes={hasUsdz ? "webxr scene-viewer quick-look" : "webxr scene-viewer"}
+        ar-modes="webxr scene-viewer quick-look"
         ar-placement="wall"
         ar-scale="auto"
         camera-controls=""
@@ -26,12 +28,18 @@ export default function ModelViewer({ artwork }) {
         exposure="1.2"
         interaction-prompt="none"
         class="ar-model"
-      >
-        <button slot="ar-button" className="ar-visual-button">
+      ></model-viewer>
+
+      {isMobile && (
+        <a
+          className="ar-visual-button"
+          rel="ar"
+          href={`https://preview.jirihauschka.com${artwork.usdz || artwork.glb}`}
+        >
           <span className="ar-ar-icon">AR</span>
           View on your wall
-        </button>
-      </model-viewer>
+        </a>
+      )}
     </div>
   );
 }
