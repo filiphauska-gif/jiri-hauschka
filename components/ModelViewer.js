@@ -1,12 +1,20 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function ModelViewer({ artwork }) {
+  const mvRef = useRef(null);
+
   useEffect(() => {
-    // Pre-load model-viewer for the AR button functionality
     import('@google/model-viewer').catch(() => {});
   }, []);
+
+  const handleAR = () => {
+    const mv = mvRef.current;
+    if (mv && mv.activateAR) {
+      mv.activateAR();
+    }
+  };
 
   return (
     <div className="model-container">
@@ -18,7 +26,13 @@ export default function ModelViewer({ artwork }) {
         />
       </div>
 
+      <button className="ar-visual-button" onClick={handleAR}>
+        <span className="ar-ar-icon">AR</span>
+        View on your wall
+      </button>
+
       <model-viewer
+        ref={mvRef}
         src={artwork.glb}
         ios-src={artwork.usdz}
         poster={artwork.poster || artwork.image}
@@ -29,10 +43,7 @@ export default function ModelViewer({ artwork }) {
         ar-scale="auto"
         class="ar-model-hidden"
       >
-        <button slot="ar-button" className="ar-ar-button">
-          <span className="ar-ar-icon">AR</span>
-          View on your wall
-        </button>
+        <button slot="ar-button" className="ar-ar-button-hidden"></button>
       </model-viewer>
     </div>
   );
