@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate improved GLB models: correct aspect ratio, with frame."""
-import os, sys, io, re, urllib.request, urllib.parse
+import os, sys, io, re, json, struct, urllib.request, urllib.parse
 from PIL import Image
 import trimesh
 import numpy as np
@@ -119,6 +119,41 @@ def create_glb_with_frame(img, out_path):
         mesh = trimesh.util.concatenate([mesh, frame_mesh])
     
     mesh.export(out_path, file_type='glb')
+    
+    # Post-process: fix material baseColorFactor to 1.0 (trimesh defaults to 0.4)
+    try:
+        with open(out_path, 'rb') as f:
+            data = f.read()
+        pos = 12
+        new_chunks = []
+        while pos < len(data):
+            chunk_len = struct.unpack('I', data[pos:pos+4])[0]
+            chunk_type = data[pos+4:pos+8]
+            chunk_data = data[pos+8:pos+8+chunk_len]
+            if chunk_type == b'JSON':
+                gltf = json.loads(chunk_data.decode('utf-8'))
+                for mat in gltf.get('materials', []):
+                    pbr = mat.get('pbrMetallicRoughness', {})
+                    if 'baseColorTexture' in pbr:
+                        pbr['baseColorFactor'] = [1.0, 1.0, 1.0, 1.0]
+                        pbr['metallicFactor'] = 0.0
+                        pbr['roughnessFactor'] = 0.9
+                    elif 'baseColorFactor' in pbr:
+                        pbr['baseColorFactor'] = [0.95, 0.93, 0.88, 1.0]
+                        pbr['metallicFactor'] = 0.0
+                        pbr['roughnessFactor'] = 0.8
+                chunk_data = json.dumps(gltf, separators=(',', ':')).encode('utf-8')
+            new_chunks.append((chunk_type, chunk_data))
+            pos += 8 + chunk_len
+        
+        new_data = b'glTF' + struct.pack('II', 2, 12)
+        for ct, cd in new_chunks:
+            new_data += struct.pack('I', len(cd)) + ct + cd
+        new_data = new_data[:8] + struct.pack('I', len(new_data)) + new_data[12:]
+        with open(out_path, 'wb') as f:
+            f.write(new_data)
+    except Exception as e:
+        print(f'Post-process error: {e}')
 
 def main():
     with open(ARTS, 'r', encoding='utf-8') as f:
