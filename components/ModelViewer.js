@@ -1,25 +1,44 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef } from 'react';
 
 export default function ModelViewer({ artwork }) {
-  const [device, setDevice] = useState(null);
+  const mvRef = useRef(null);
 
   useEffect(() => {
-    import('@google/model-viewer').catch(() => {});
-    const ua = navigator.userAgent;
-    if (/iphone|ipad|ipod/i.test(ua)) setDevice('ios');
-    else if (/android/i.test(ua)) setDevice('android');
-    else setDevice('desktop');
+    import('@google/model-viewer').then(() => {
+      console.log('model-viewer loaded');
+    }).catch((e) => {
+      console.error('model-viewer failed:', e);
+    });
   }, []);
 
-  const glbUrl = `https://preview.jirihauschka.com${artwork.glb}`;
-  const usdzUrl = artwork.usdz ? `https://preview.jirihauschka.com${artwork.usdz}` : glbUrl;
-  const sceneViewerUrl = `intent://arvr.google.com/scene-viewer/1.0?file=${encodeURIComponent(glbUrl)}&mode=ar_only&title=${encodeURIComponent(artwork.title)}#Intent;scheme=https;package=com.google.ar.core;action=android.intent.action.VIEW;end;`;
+  const handleAR = () => {
+    const mv = mvRef.current;
+    if (mv) {
+      console.log('model-viewer element:', mv);
+      if (typeof mv.activateAR === 'function') {
+        console.log('calling activateAR...');
+        try {
+          mv.activateAR();
+        } catch (e) {
+          console.error('activateAR error:', e);
+        }
+      } else {
+        console.log('activateAR not available, trying rel=ar fallback');
+        // Fallback: directly open the GLB
+        const a = document.createElement('a');
+        a.rel = 'ar';
+        a.href = `https://preview.jirihauschka.com${artwork.usdz || artwork.glb}`;
+        a.click();
+      }
+    }
+  };
 
   return (
     <div className="model-container">
       <model-viewer
+        ref={mvRef}
         src={artwork.glb}
         ios-src={artwork.usdz}
         poster={artwork.poster || artwork.image}
@@ -36,23 +55,10 @@ export default function ModelViewer({ artwork }) {
         class="ar-model"
       ></model-viewer>
 
-      <div className="ar-actions">
-        {device === 'ios' && (
-          <a className="ar-visual-button" rel="ar" href={usdzUrl}>
-            <span className="ar-ar-icon">AR</span>
-            View on your wall
-          </a>
-        )}
-        {device === 'android' && (
-          <a className="ar-visual-button" href={sceneViewerUrl}>
-            <span className="ar-ar-icon">AR</span>
-            View on your wall
-          </a>
-        )}
-        {device === 'desktop' && (
-          <p className="ar-desktop-hint">Open this page on your phone to try AR</p>
-        )}
-      </div>
+      <button className="ar-visual-button" onClick={handleAR}>
+        <span className="ar-ar-icon">AR</span>
+        View on your wall
+      </button>
     </div>
   );
 }
