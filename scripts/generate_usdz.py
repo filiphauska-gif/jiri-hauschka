@@ -1,11 +1,80 @@
 #!/usr/bin/env python3
-"""Generate USDZ files matching colored-moments structure EXACTLY."""
+"""Generate USDZ using EXACT colored-moments template with CRLF."""
 import os, io, zipfile, re, urllib.request, urllib.parse
 from PIL import Image
 
 BASE = r'C:\Users\Hauska\jiri-hauschka-next'
 ARTS = os.path.join(BASE, 'lib', 'artworks.js')
 ASSETS = os.path.join(BASE, 'public', 'assets')
+
+# Template based on colored-moments USDA (CRLF line endings)
+USDA_TEMPLATE = '''#usda 1.0
+(
+    defaultPrim = "Artwork"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Artwork"
+{
+    def Mesh "Canvas"
+    {
+        uniform token subdivisionScheme = "none"
+        float3[] extent = [{{EXTENT_MIN}}, {{EXTENT_MAX}}]
+        int[] faceVertexCounts = [4,4,4,4,4,4]
+        int[] faceVertexIndices = [
+            0,1,2,3,
+            4,5,6,7,
+            8,9,10,11,
+            12,13,14,15,
+            16,17,18,19,
+            20,21,22,23
+        ]
+        point3f[] points = [
+            {{POINTS}}
+        ]
+        texCoord2f[] primvars:st = [
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1),
+            (0,0),(1,0),(1,1),(0,1)
+        ] (
+            interpolation = "varying"
+        )
+        rel material:binding = </ArtworkMaterial>
+    }
+}
+
+def Material "ArtworkMaterial"
+{
+    token outputs:surface.connect = </ArtworkMaterial/PreviewSurface.outputs:surface>
+    def Shader "PreviewSurface"
+    {
+        uniform token info:id = "UsdPreviewSurface"
+        color3f inputs:diffuseColor.connect = </ArtworkMaterial/DiffuseTexture.outputs:rgb>
+        float inputs:roughness = 0.82
+        float inputs:metallic = 0
+        token outputs:surface
+    }
+    def Shader "DiffuseTexture"
+    {
+        uniform token info:id = "UsdUVTexture"
+        asset inputs:file = @texture.png@
+        token inputs:wrapS = "clamp"
+        token inputs:wrapT = "clamp"
+        float2 inputs:st.connect = </ArtworkMaterial/PrimvarReader.outputs:result>
+        token outputs:rgb
+    }
+    def Shader "PrimvarReader"
+    {
+        uniform token info:id = "UsdPrimvarReader_float2"
+        token inputs:varname = "st"
+        float2 outputs:result
+    }
+}
+'''
 
 def encode_url(url):
     parsed = list(urllib.parse.urlsplit(url))
@@ -19,92 +88,42 @@ def download_image(url):
     return data
 
 def create_usdz(texture_bytes, out_path, w_px, h_px):
-    """Create USDZ matching colored-moments EXACT structure"""
     max_dim = max(w_px, h_px)
     w = w_px / max_dim * 0.9
     h = h_px / max_dim * 0.9
     hw, hh = w/2, h/2
     d = 0.025
     
-    # 6 quad faces, 4 separate vertices per face (24 total)
-    # Same vertex ordering as colored-moments
+    # 6 quads, 24 vertices (matching colored-moments)
     pts = [
-        # front face (textured)
+        # front (textured)
         (-hw,-hh,d), (hw,-hh,d), (hw,hh,d), (-hw,hh,d),
-        # back face
+        # back
         (hw,-hh,-d), (-hw,-hh,-d), (-hw,hh,-d), (hw,hh,-d),
-        # right face
+        # right
         (hw,-hh,d), (hw,-hh,-d), (hw,hh,-d), (hw,hh,d),
-        # left face
+        # left
         (-hw,-hh,-d), (-hw,-hh,d), (-hw,hh,d), (-hw,hh,-d),
-        # top face
+        # top
         (-hw,hh,d), (hw,hh,d), (hw,hh,-d), (-hw,hh,-d),
-        # bottom face
+        # bottom
         (-hw,-hh,-d), (hw,-hh,-d), (hw,-hh,d), (-hw,-hh,d),
     ]
     
-    # UV coords: each face has full 0-1 UVs (same as colored-moments)
-    uv = [(0,0),(1,0),(1,1),(0,1)] * 6
-    
     def fmt(v): return f"({v[0]:.6f},{v[1]:.6f},{v[2]:.6f})"
-    def fmt2(v): return f"({v[0]:.6f},{v[1]:.6f})"
     
-    pts_str = ','.join(fmt(p) for p in pts)
-    uv_str = ','.join(fmt2(u) for u in uv)
+    ext_min = fmt((-hw, -hh, -d))
+    ext_max = fmt((hw, hh, d))
+    pts_str = ',\n            '.join(fmt(p) for p in pts)
     
-    usda = f'''#usda 1.0
-(
-    defaultPrim = "Artwork"
-    metersPerUnit = 1
-    upAxis = "Y"
-)
-
-def Xform "Artwork"
-{{
-    def Mesh "Canvas"
-    {{
-        uniform token subdivisionScheme = "none"
-        float3[] extent = [({-hw:.6f},{-hh:.6f},{-d:.6f}), ({hw:.6f},{hh:.6f},{d:.6f})]
-        int[] faceVertexCounts = [4,4,4,4,4,4]
-        int[] faceVertexIndices = [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
-        point3f[] points = [{pts_str}]
-        texCoord2f[] primvars:st = [{uv_str}] (
-            interpolation = "varying"
-        )
-        rel material:binding = </ArtworkMaterial>
-    }}
-}}
-
-def Material "ArtworkMaterial"
-{{
-    token outputs:surface.connect = </ArtworkMaterial/PreviewSurface.outputs:surface>
-    def Shader "PreviewSurface"
-    {{
-        uniform token info:id = "UsdPreviewSurface"
-        color3f inputs:diffuseColor.connect = </ArtworkMaterial/DiffuseTexture.outputs:rgb>
-        float inputs:roughness = 0.82
-        float inputs:metallic = 0
-        token outputs:surface
-    }}
-    def Shader "DiffuseTexture"
-    {{
-        uniform token info:id = "UsdUVTexture"
-        asset inputs:file = @texture.png@
-        token inputs:wrapS = "clamp"
-        token inputs:wrapT = "clamp"
-        float2 inputs:st.connect = </ArtworkMaterial/PrimvarReader.outputs:result>
-        token outputs:rgb
-    }}
-    def Shader "PrimvarReader"
-    {{
-        uniform token info:id = "UsdPrimvarReader_float2"
-        token inputs:varname = "st"
-        float2 outputs:result
-    }}
-}}
-'''
+    usda = USDA_TEMPLATE.replace('{{EXTENT_MIN}}', ext_min)
+    usda = usda.replace('{{EXTENT_MAX}}', ext_max)
+    usda = usda.replace('{{POINTS}}', pts_str)
     
-    with zipfile.ZipFile(out_path, 'w', zipfile.ZIP_DEFLATED) as zf:
+    # Ensure CRLF line endings (like colored-moments)
+    usda = usda.replace('\n', '\r\n')
+    
+    with zipfile.ZipFile(out_path, 'w', zipfile.ZIP_STORED) as zf:
         zf.writestr('model.usda', usda)
         zf.writestr('texture.png', texture_bytes)
 

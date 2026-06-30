@@ -120,7 +120,7 @@ export default function HomePage() {
             <div className="lightbox-meta">
               <h3>{lightbox.title}</h3>
               <p>{lightbox.year}{lightbox.medium ? ` · ${lightbox.medium}` : ''}{lightbox.size ? ` · ${lightbox.size}` : ''}</p>
-              {lightbox.ar && <Link className="btn primary" href={`/ar/${lightbox.slug}`}>View on your wall</Link>}
+              {lightbox.ar && <span className="mobile-only"><Link className="btn primary" href={`/ar/${lightbox.slug}`}>View on your wall</Link></span>}
             </div>
           </div>
         </div>
