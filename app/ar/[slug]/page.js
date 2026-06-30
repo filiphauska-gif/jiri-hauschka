@@ -1,17 +1,18 @@
 import Link from 'next/link';
-import ModelViewer from '../../../components/ModelViewer';
 import { artworks } from '../../../lib/artworks';
+import ModelViewer from '../../../components/ModelViewer';
+import ArSelector from '../../../components/ArSelector';
 
 export function generateStaticParams() {
-  return artworks.filter((artwork) => artwork.ar).map((artwork) => ({ slug: artwork.slug }));
+  return artworks.filter((a) => a.ar).map((a) => ({ slug: a.slug }));
 }
 
 export default async function ArtworkArPage({ params }) {
   const { slug } = await params;
-  const artwork = artworks.find((item) => item.slug === slug && item.ar);
+  const artwork = artworks.find((a) => a.slug === slug && a.ar);
 
   if (!artwork) {
-    return <main className="ar-page"><Link className="back" href="/">← Back</Link><h1>AR preview not available.</h1></main>;
+    return <main className="ar-page"><Link className="back" href="/">← Back</Link><h1>AR not available.</h1></main>;
   }
 
   return (
@@ -33,7 +34,7 @@ export default async function ArtworkArPage({ params }) {
         <div className="wrap ar-page-top">
           <div className="ar-page-info">
             <div className="kicker light">Augmented reality</div>
-            <h1>{artwork.title}</h1>
+            <ArSelector currentSlug={slug} />
             <div className="ar-meta">{artwork.year} · {artwork.medium}{artwork.size ? ` · ${artwork.size}` : ''}</div>
             <p className="ar-hint">Tap the AR button below to place this painting on your wall.</p>
           </div>

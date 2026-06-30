@@ -156,6 +156,9 @@ section{padding:80px 0}
 .ar-ar-icon{background:rgba(255,255,255,.2);border-radius:6px;padding:2px 6px;font-size:11px;font-weight:700;letter-spacing:.05em}
 .ar-footer{padding:40px 0}
 .ar-footer a{color:var(--blue);font-size:14px}
+.ar-select-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.ar-select{background:rgba(255,255,255,.1);color:white;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:8px 14px;font-size:14px;cursor:pointer;max-width:320px}
+.ar-select option{background:#222;color:white}
 
 /* Responsive */
 @media(max-width:768px){
