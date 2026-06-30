@@ -1,42 +1,18 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 export default function ModelViewer({ artwork }) {
-  const mvRef = useRef(null);
-
   useEffect(() => {
     import('@google/model-viewer').catch(() => {});
   }, []);
 
-  const handleAR = async () => {
-    const mv = mvRef.current;
-    if (!mv) return;
-
-    // Try activateAR first (works on iOS via Quick Look, Android via Scene Viewer)
-    if (typeof mv.activateAR === 'function') {
-      try {
-        await mv.activateAR();
-        return; // Success!
-      } catch (e) {
-        console.log('activateAR failed, trying fallback:', e);
-      }
-    }
-
-    // Fallback: try rel="ar" link
-    const srcUrl = `https://preview.jirihauschka.com${artwork.usdz || artwork.glb}`;
-    const a = document.createElement('a');
-    a.rel = 'ar';
-    a.href = srcUrl;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
+  const glbUrl = `https://preview.jirihauschka.com${artwork.glb}`;
+  const usdzUrl = artwork.usdz ? `https://preview.jirihauschka.com${artwork.usdz}` : glbUrl;
 
   return (
     <div className="model-container">
       <model-viewer
-        ref={mvRef}
         src={artwork.glb}
         ios-src={artwork.usdz}
         poster={artwork.poster || artwork.image}
@@ -53,10 +29,10 @@ export default function ModelViewer({ artwork }) {
         class="ar-model"
       ></model-viewer>
 
-      <button className="ar-visual-button" onClick={handleAR}>
+      <a className="ar-visual-button" rel="ar" href={usdzUrl}>
         <span className="ar-ar-icon">AR</span>
         View on your wall
-      </button>
+      </a>
     </div>
   );
 }
