@@ -259,7 +259,7 @@ def create_glb(img, out_path):
     while len(json_bytes) % 4: json_bytes += b' '
     glb = b'glTF' + struct.pack('II', 2, 12)
     glb += struct.pack('I', len(json_bytes)) + b'JSON' + json_bytes
-    glb += struct.pack('I', len(buf0)) + b'BIN' + buf0
+    glb += struct.pack('I', len(buf0)) + b'BIN\x00' + buf0
     glb = glb[:8] + struct.pack('I', len(glb)) + glb[12:]
     with open(out_path, 'wb') as f:
         f.write(glb)
