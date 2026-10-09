@@ -584,17 +584,17 @@
     },
     {
       "source": "/beatiful-boys",
-      "destination": "/#works",
+      "destination": "/ar/beautiful-boys/",
       "permanent": true
     },
     {
       "source": "/beatiful-boys/",
-      "destination": "/#works",
+      "destination": "/ar/beautiful-boys/",
       "permanent": true
     },
     {
       "source": "/beatiful-boys/:path*",
-      "destination": "/#works",
+      "destination": "/ar/beautiful-boys/",
       "permanent": true
     },
     {
@@ -629,17 +629,17 @@
     },
     {
       "source": "/feral",
-      "destination": "/#works",
+      "destination": "/ar/feral-2022/",
       "permanent": true
     },
     {
       "source": "/feral/",
-      "destination": "/#works",
+      "destination": "/ar/feral-2022/",
       "permanent": true
     },
     {
       "source": "/feral/:path*",
-      "destination": "/#works",
+      "destination": "/ar/feral-2022/",
       "permanent": true
     },
     {
@@ -1244,17 +1244,17 @@
     },
     {
       "source": "/cinema-ii",
-      "destination": "/#works",
+      "destination": "/ar/cinema-2/",
       "permanent": true
     },
     {
       "source": "/cinema-ii/",
-      "destination": "/#works",
+      "destination": "/ar/cinema-2/",
       "permanent": true
     },
     {
       "source": "/cinema-ii/:path*",
-      "destination": "/#works",
+      "destination": "/ar/cinema-2/",
       "permanent": true
     },
     {
@@ -1619,47 +1619,47 @@
     },
     {
       "source": "/2016-white-river",
-      "destination": "/#works",
+      "destination": "/ar/white-river/",
       "permanent": true
     },
     {
       "source": "/2016-white-river/",
-      "destination": "/#works",
+      "destination": "/ar/white-river/",
       "permanent": true
     },
     {
       "source": "/2016-white-river/:path*",
-      "destination": "/#works",
+      "destination": "/ar/white-river/",
       "permanent": true
     },
     {
       "source": "/2016-tree-of-life",
-      "destination": "/#works",
+      "destination": "/ar/tree-of-life-2/",
       "permanent": true
     },
     {
       "source": "/2016-tree-of-life/",
-      "destination": "/#works",
+      "destination": "/ar/tree-of-life-2/",
       "permanent": true
     },
     {
       "source": "/2016-tree-of-life/:path*",
-      "destination": "/#works",
+      "destination": "/ar/tree-of-life-2/",
       "permanent": true
     },
     {
       "source": "/576",
-      "destination": "/#works",
+      "destination": "/ar/silent-night/",
       "permanent": true
     },
     {
       "source": "/576/",
-      "destination": "/#works",
+      "destination": "/ar/silent-night/",
       "permanent": true
     },
     {
       "source": "/576/:path*",
-      "destination": "/#works",
+      "destination": "/ar/silent-night/",
       "permanent": true
     },
     {
@@ -2744,17 +2744,17 @@
     },
     {
       "source": "/hack",
-      "destination": "/#works",
+      "destination": "/ar/battersea/",
       "permanent": true
     },
     {
       "source": "/hack/",
-      "destination": "/#works",
+      "destination": "/ar/battersea/",
       "permanent": true
     },
     {
       "source": "/hack/:path*",
-      "destination": "/#works",
+      "destination": "/ar/battersea/",
       "permanent": true
     },
     {

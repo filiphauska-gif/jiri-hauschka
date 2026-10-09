@@ -23,8 +23,24 @@ RENAMES = {
     '427': 'around-us', '421': 'angels', '503': 'wave',
     'inthe-middle-of-somewhere': 'in-the-middle-of-somewhere',
 }
+# Extra manual mappings (WP slug differs from ours)
+EXTRA_MAP = {
+    'beatiful-boys': 'beautiful-boys',
+    'feral': 'feral-2022',
+    'cinema-ii': 'cinema-2',
+    '2016-white-river': 'white-river',
+    '2016-tree-of-life': 'tree-of-life-2',
+    '576': 'silent-night',
+    'hack': 'battersea',
+}
 
 redirects = []
+
+def add_rules(slug, dest):
+    """3 explicit variants: without slash, with slash, subpaths."""
+    redirects.append({'source': f'/{slug}', 'destination': dest, 'permanent': True})
+    redirects.append({'source': f'/{slug}/', 'destination': dest, 'permanent': True})
+    redirects.append({'source': f'/{slug}/:path*', 'destination': dest, 'permanent': True})
 
 # Pages
 page_map = {
@@ -32,26 +48,26 @@ page_map = {
     'contact': '/#contact', 'intro': '/', 'home-template': '/',
     'instagram-feed': '/#instagram',
 }
-for old, dest in page_map.items():
-    redirects.append({'source': f'/{old}/?', 'destination': dest, 'permanent': True})
+for slug, dest in page_map.items():
+    add_rules(slug, dest)
 
 # Posts
-mapped = renamed = fallback = 0
+counts = {'direct': 0, 'renamed': 0, 'extra': 0, 'fallback': 0}
 for slug in old_posts:
     if slug in new_slugs:
-        redirects.append({'source': f'/{slug}/?', 'destination': f'/ar/{slug}/', 'permanent': True})
-        mapped += 1
+        dest = f'/ar/{slug}/'; counts['direct'] += 1
     elif slug in RENAMES and RENAMES[slug] in new_slugs:
-        redirects.append({'source': f'/{slug}/?', 'destination': f'/ar/{RENAMES[slug]}/', 'permanent': True})
-        renamed += 1
+        dest = f'/ar/{RENAMES[slug]}/'; counts['renamed'] += 1
+    elif slug in EXTRA_MAP and EXTRA_MAP[slug] in new_slugs:
+        dest = f'/ar/{EXTRA_MAP[slug]}/'; counts['extra'] += 1
     else:
-        redirects.append({'source': f'/{slug}/?', 'destination': '/#works', 'permanent': True})
-        fallback += 1
+        dest = '/#works'; counts['fallback'] += 1
+    add_rules(slug, dest)
 
-print(f'Posts: {mapped} direct, {renamed} renamed, {fallback} fallback -> /#works')
+print(f'Posts: {counts}')
 print(f'Total redirects: {len(redirects)}')
 
-# 4) Write vercel.json (keep existing headers, add redirects)
+# 4) Write vercel.json (keep existing headers, replace redirects)
 vercel = json.load(open(os.path.join(BASE, 'vercel.json'), encoding='utf-8'))
 vercel['redirects'] = redirects
 with open(os.path.join(BASE, 'vercel.json'), 'w', encoding='utf-8') as f:
@@ -59,11 +75,7 @@ with open(os.path.join(BASE, 'vercel.json'), 'w', encoding='utf-8') as f:
 print('vercel.json updated')
 
 # 5) robots.txt
-robots = """User-agent: *
-Allow: /
-
-Sitemap: https://jirihauschka.com/sitemap.xml
-"""
+robots = "User-agent: *\nAllow: /\n\nSitemap: https://jirihauschka.com/sitemap.xml\n"
 open(os.path.join(BASE, 'public', 'robots.txt'), 'w', encoding='utf-8').write(robots)
 print('public/robots.txt written')
 
