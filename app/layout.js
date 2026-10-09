@@ -6,6 +6,14 @@ const GA_ID = 'G-77VNHD7BXJ';
 export const metadata = {
   title: 'Jiri Hauschka — Czech Painter',
   description: 'Contemporary Czech painter. Paintings between abstraction, figuration and magical realism. Available for exhibitions and sales.',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '48x48' },
+      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+    ],
+    apple: '/apple-touch-icon.png',
+  },
   openGraph: {
     title: 'Jiri Hauschka — Czech Painter',
     description: 'Contemporary Czech painter. Paintings between abstraction, figuration and magical realism.',
@@ -38,6 +46,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:title" content="Jiri Hauschka — Czech Painter" />
         <meta name="twitter:description" content="Contemporary Czech painter. Paintings between abstraction, figuration and magical realism." />
         <meta name="robots" content="index, follow" />
+        <meta name="theme-color" content="#0a0a0a" />
         <link rel="canonical" href="https://jirihauschka.com" />
       </head>
       <body>

@@ -56,6 +56,26 @@ export default function HomePage() {
     return () => window.removeEventListener('keydown', onKey);
   }, [lightbox, lbClosing]);
 
+  useEffect(() => {
+    // Strip leftover #fragment from the URL (anchor links / legacy redirects)
+    if (window.location.hash) {
+      history.replaceState(null, '', window.location.pathname + window.location.search);
+    }
+    // Smooth-scroll same-page anchors without polluting the URL
+    const onClick = (e) => {
+      const a = e.target.closest && e.target.closest('a[href^="#"]');
+      if (!a) return;
+      const el = document.getElementById(a.getAttribute('href').slice(1));
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth' });
+        setMenuOpen(false);
+      }
+    };
+    document.addEventListener('click', onClick);
+    return () => document.removeEventListener('click', onClick);
+  }, []);
+
   return (
     <main>
       <nav className="nav">
