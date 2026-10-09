@@ -22,7 +22,7 @@ export default async function ArtworkArPage({ params }) {
           <Link href="/" className="brand">Jiri Hauschka</Link>
           <div className="links">
             <Link href="/#works">Works</Link>
-            <Link href="/#bio">Bio</Link>
+            <Link href="/bio">Bio</Link>
             <Link href="/exhibitions">Exhibitions</Link>
             <span className="nav-active">AR</span>
             <Link href="/#contact">Contact</Link>

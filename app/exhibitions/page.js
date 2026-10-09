@@ -90,7 +90,7 @@ export default function ExhibitionsPage() {
           <Link href="/" className="brand">Jiri Hauschka</Link>
           <div className="links">
             <Link href="/#works">Works</Link>
-            <Link href="/#bio">Bio</Link>
+            <Link href="/bio">Bio</Link>
             <span className="nav-active">Exhibitions</span>
             <a href="/#ar">AR</a>
             <Link href="/#contact">Contact</Link>

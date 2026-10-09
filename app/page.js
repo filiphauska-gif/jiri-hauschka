@@ -49,7 +49,7 @@ export default function HomePage() {
           </button>
           <div className={`links${menuOpen ? ' links-open' : ''}`}>
             <a href="#works" onClick={() => setMenuOpen(false)}>Works</a>
-            <a href="#bio" onClick={() => setMenuOpen(false)}>Bio</a>
+            <Link href="/bio" onClick={() => setMenuOpen(false)}>Bio</Link>
             <Link href="/exhibitions" onClick={() => setMenuOpen(false)}>Exhibitions</Link>
             <a href="#ar" onClick={() => setMenuOpen(false)}>AR</a>
             <a href="#instagram" onClick={() => setMenuOpen(false)}>Instagram</a>
@@ -136,6 +136,7 @@ export default function HomePage() {
               <div className="fact"><strong>Medium</strong><span>Acrylic on canvas</span></div>
               <div className="fact"><strong>Focus</strong><span>Nature, memory, symbolic landscapes</span></div>
             </div>
+            <Link className="btn primary bio-read-more" href="/bio">Read more</Link>
           </div>
         </div>
       </section>
