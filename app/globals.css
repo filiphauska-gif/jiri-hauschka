@@ -21,7 +21,7 @@ img{max-width:100%;display:block}
 .hamburger-line.open:after{transform:rotate(-45deg);top:0}
 
 /* Hero */
-.hero{min-height:100vh;color:#fff;display:grid;align-items:end;padding:108px 22px 42px;overflow:hidden;position:relative}
+.hero{min-height:100vh;color:#fff;display:grid;align-items:end;padding:108px 22px 84px;overflow:hidden;position:relative}
 .hero-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.32) saturate(.7);z-index:0}
 .hero-bg:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.6) 0%,transparent 50%),radial-gradient(ellipse 60% 50% at 50% 0%,rgba(255,200,150,.08),transparent 60%);pointer-events:none}
 .hero-inner{position:relative;z-index:1;width:min(var(--max),100%);margin:0 auto;display:grid;grid-template-columns:.72fr 1.28fr;gap:64px;align-items:end}
@@ -156,7 +156,7 @@ section{padding:80px 0}
 .ar-visual-button{margin-top:20px}
 .ar-visual-button{display:inline-flex;align-items:center;gap:10px;background:#0071e3;color:white;border:none;padding:14px 32px;border-radius:40px;font-size:16px;font-weight:500;cursor:pointer;transition:all .2s}
 .ar-visual-button:hover{background:#0066cc}
-.hero-scroll{display:none}
+.hero-scroll{display:flex;position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);color:rgba(255,255,255,.9);align-items:center;justify-content:center;z-index:2;animation:heroBob 2.4s ease-in-out infinite}
 .ar-static-preview{display:none}
 .ar-short{display:inline}
 .ar-long{display:none}
@@ -234,10 +234,8 @@ p.bio-text-author{font-size:14px;color:var(--muted);font-style:italic}
   .nav .links{display:none}
   .hamburger{display:block;z-index:30}
   .links-open{display:flex!important;flex-direction:column;position:fixed;top:0;left:0;right:0;padding:68px 22px 22px;background:rgba(0,0,0,.95);gap:16px;font-size:16px;z-index:25;backdrop-filter:blur(20px)}
-  .hero .actions{display:none}
   .hero-bg{filter:none}
   .hero-bg:after{background:linear-gradient(0deg,rgba(4,6,5,.85) 0%,rgba(4,6,5,.6) 30%,rgba(4,6,5,.22) 55%,transparent 78%),radial-gradient(ellipse 60% 50% at 50% 0%,rgba(255,200,150,.08),transparent 60%)}
-  .hero-scroll{display:flex;position:absolute;left:50%;bottom:26px;transform:translateX(-50%);width:44px;height:44px;border-radius:50%;border:1.5px solid rgba(255,255,255,.4);color:rgba(255,255,255,.9);align-items:center;justify-content:center;z-index:2;animation:heroBob 2.4s ease-in-out infinite}
   .intro-section{display:none}
   .bio-read-more{display:flex;width:max-content;margin:20px auto 0}
   .ar-short{display:none}

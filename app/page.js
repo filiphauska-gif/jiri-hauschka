@@ -100,9 +100,6 @@ export default function HomePage() {
           <div>
             <h1>Jiri<br />Hauschka</h1>
             <p className="lead">Paintings between abstraction, figuration and magical realism.</p>
-            <div className="actions">
-              <a className="btn primary" href="#works">View paintings</a>
-            </div>
           </div>
           <figure className="hero-art">
             <img src={artworks[0].image} alt={`${artworks[0].title} by Jiri Hauschka`} />
