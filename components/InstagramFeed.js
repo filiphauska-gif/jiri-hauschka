@@ -5,7 +5,7 @@ export default function InstagramFeed() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
-    fetch('https://jirihauschka.com/wp-json/wp/v2/pages/1706?_fields=content')
+    fetch('https://admin.jirihauschka.com/wp-json/wp/v2/pages/1706?_fields=content')
       .then(r => r.json())
       .then(data => {
         const html = data.content.rendered;

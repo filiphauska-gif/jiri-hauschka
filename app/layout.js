@@ -38,7 +38,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:title" content="Jiri Hauschka — Czech Painter" />
         <meta name="twitter:description" content="Contemporary Czech painter. Paintings between abstraction, figuration and magical realism." />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://preview.jirihauschka.com" />
+        <link rel="canonical" href="https://jirihauschka.com" />
       </head>
       <body>
         {children}
