@@ -60,6 +60,8 @@ export default function ModelViewer({ artwork }) {
         <span className="ar-ar-icon">AR</span>
         View on your wall
       </button>
+
+      <img className="ar-static-preview" src={artwork.image} alt={`${artwork.title} by Jiri Hauschka`} />
     </div>
   );
 }

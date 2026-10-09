@@ -88,7 +88,7 @@ export default function HomePage() {
             <a href="#works" onClick={() => setMenuOpen(false)}>Works</a>
             <Link href="/bio" onClick={() => setMenuOpen(false)}>Bio</Link>
             <Link href="/exhibitions" onClick={() => setMenuOpen(false)}>Exhibitions</Link>
-            <a href="#ar" onClick={() => setMenuOpen(false)}>AR</a>
+            <a href="#ar" onClick={() => setMenuOpen(false)}><span className="ar-short">AR</span><span className="ar-long">Augmented reality</span></a>
             <a href="#instagram" onClick={() => setMenuOpen(false)}>Instagram</a>
             <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
           </div>
@@ -109,9 +109,12 @@ export default function HomePage() {
             <figcaption className="caption">{artworks[0].title}, {artworks[0].year}</figcaption>
           </figure>
         </div>
+        <a href="#works" className="hero-scroll" aria-label="Scroll to paintings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+        </a>
       </header>
 
-      <section>
+      <section className="intro-section">
         <div className="wrap intro-card">
           <p>Memory, nature and inner landscapes.</p>
           <div className="quote">A quiet frame for paintings that carry the colour and atmosphere themselves.</div>
