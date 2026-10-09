@@ -6,3 +6,4 @@ serve_static.py
 .env
 .env.local
 .DS_Store
+scripts/compare/

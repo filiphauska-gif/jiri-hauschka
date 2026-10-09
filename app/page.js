@@ -19,16 +19,27 @@ function QRCode({ url, size = 140 }) {
 export default function HomePage() {
   const [count, setCount] = useState(PER_PAGE);
   const [lightbox, setLightbox] = useState(null);
+  const [lbClosing, setLbClosing] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const visible = artworks.slice(0, count);
   const hasMore = count < artworks.length;
 
   const openLightbox = (slug) => {
     const art = artworkBySlug(slug);
-    if (art) setLightbox(art);
+    if (art) {
+      setLbClosing(false);
+      setLightbox(art);
+    }
   };
 
-  const closeLightbox = () => setLightbox(null);
+  const closeLightbox = () => {
+    if (!lightbox || lbClosing) return;
+    setLbClosing(true);
+    window.setTimeout(() => {
+      setLightbox(null);
+      setLbClosing(false);
+    }, 250);
+  };
 
   useEffect(() => {
     if (lightbox) {
@@ -38,6 +49,12 @@ export default function HomePage() {
     }
     return () => { document.body.style.overflow = ''; };
   }, [lightbox]);
+
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === 'Escape') closeLightbox(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [lightbox, lbClosing]);
 
   return (
     <main>
@@ -112,7 +129,7 @@ export default function HomePage() {
       </section>
 
       {lightbox && (
-        <div className="lightbox" onClick={closeLightbox}>
+        <div className={`lightbox${lbClosing ? ' closing' : ''}`} onClick={closeLightbox}>
           <span className="lightbox-close">&times;</span>
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
             <img src={lightbox.image} alt={lightbox.title} />
