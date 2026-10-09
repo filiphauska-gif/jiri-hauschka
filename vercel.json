@@ -3,12 +3,954 @@
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "X-Frame-Options", "value": "DENY" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "geolocation=(), microphone=(), payment=(), usb=()" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' blob: https://jirihauschka.com https://*.jirihauschka.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "geolocation=(), microphone=(), payment=(), usb=()"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' blob: https://jirihauschka.com https://*.jirihauschka.com https://www.googletagmanager.com https://www.google-analytics.com https://*.google-analytics.com; worker-src 'self' blob:; media-src 'self' blob:; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+        }
       ]
+    }
+  ],
+  "redirects": [
+    {
+      "source": "/work/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/works/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/works-available/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/contact/?",
+      "destination": "/#contact",
+      "permanent": true
+    },
+    {
+      "source": "/intro/?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/home-template/?",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/instagram-feed/?",
+      "destination": "/#instagram",
+      "permanent": true
+    },
+    {
+      "source": "/bohemian-forest-5/?",
+      "destination": "/ar/bohemian-forest-5/",
+      "permanent": true
+    },
+    {
+      "source": "/bride/?",
+      "destination": "/ar/bride/",
+      "permanent": true
+    },
+    {
+      "source": "/fragility/?",
+      "destination": "/ar/fragility/",
+      "permanent": true
+    },
+    {
+      "source": "/heartbeats/?",
+      "destination": "/ar/heartbeats/",
+      "permanent": true
+    },
+    {
+      "source": "/i-need-the-night/?",
+      "destination": "/ar/i-need-the-night/",
+      "permanent": true
+    },
+    {
+      "source": "/saint-sebastian-with-plastic-arrows/?",
+      "destination": "/ar/saint-sebastian-with-plastic-arrows/",
+      "permanent": true
+    },
+    {
+      "source": "/upside-down/?",
+      "destination": "/ar/upside-down/",
+      "permanent": true
+    },
+    {
+      "source": "/their-love/?",
+      "destination": "/ar/their-love/",
+      "permanent": true
+    },
+    {
+      "source": "/colored-moments/?",
+      "destination": "/ar/colored-moments/",
+      "permanent": true
+    },
+    {
+      "source": "/all-my-boats/?",
+      "destination": "/ar/all-my-boats/",
+      "permanent": true
+    },
+    {
+      "source": "/fisher-island-sound/?",
+      "destination": "/ar/fisher-island-sound/",
+      "permanent": true
+    },
+    {
+      "source": "/red-coast/?",
+      "destination": "/ar/red-coast/",
+      "permanent": true
+    },
+    {
+      "source": "/mermaid/?",
+      "destination": "/ar/mermaid/",
+      "permanent": true
+    },
+    {
+      "source": "/red-house/?",
+      "destination": "/ar/red-house/",
+      "permanent": true
+    },
+    {
+      "source": "/dream-about-renoir/?",
+      "destination": "/ar/dream-about-renoir/",
+      "permanent": true
+    },
+    {
+      "source": "/conversation/?",
+      "destination": "/ar/conversation/",
+      "permanent": true
+    },
+    {
+      "source": "/evening-walk-along-the-sea-that-never-freezes/?",
+      "destination": "/ar/evening-walk-along-the-sea-that-never-freezes/",
+      "permanent": true
+    },
+    {
+      "source": "/albatross/?",
+      "destination": "/ar/albatross/",
+      "permanent": true
+    },
+    {
+      "source": "/fallen-suns/?",
+      "destination": "/ar/fallen-suns/",
+      "permanent": true
+    },
+    {
+      "source": "/pocket-museum-yellow-version/?",
+      "destination": "/ar/pocket-museum-yellow-version/",
+      "permanent": true
+    },
+    {
+      "source": "/two-dogs-inside/?",
+      "destination": "/ar/two-dogs-inside/",
+      "permanent": true
+    },
+    {
+      "source": "/bohemian-forest-4/?",
+      "destination": "/ar/bohemian-forest-4/",
+      "permanent": true
+    },
+    {
+      "source": "/bohemian-forest-3/?",
+      "destination": "/ar/bohemian-forest-3/",
+      "permanent": true
+    },
+    {
+      "source": "/shell-picker/?",
+      "destination": "/ar/shell-picker/",
+      "permanent": true
+    },
+    {
+      "source": "/speak-my-language/?",
+      "destination": "/ar/speak-my-language/",
+      "permanent": true
+    },
+    {
+      "source": "/one-perfect-sunrise/?",
+      "destination": "/ar/one-perfect-sunrise/",
+      "permanent": true
+    },
+    {
+      "source": "/thank-you/?",
+      "destination": "/ar/thank-you/",
+      "permanent": true
+    },
+    {
+      "source": "/candy-land/?",
+      "destination": "/ar/candy-land/",
+      "permanent": true
+    },
+    {
+      "source": "/this-is-not-a-love-song/?",
+      "destination": "/ar/this-is-not-a-love-song/",
+      "permanent": true
+    },
+    {
+      "source": "/eucalyptus/?",
+      "destination": "/ar/eucalyptus/",
+      "permanent": true
+    },
+    {
+      "source": "/beatiful-boys/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/untitled-2/?",
+      "destination": "/ar/untitled-2/",
+      "permanent": true
+    },
+    {
+      "source": "/midnight-dream/?",
+      "destination": "/ar/midnight-dream/",
+      "permanent": true
+    },
+    {
+      "source": "/feral/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/birth/?",
+      "destination": "/ar/birth/",
+      "permanent": true
+    },
+    {
+      "source": "/ocean-is-close/?",
+      "destination": "/ar/ocean-is-close/",
+      "permanent": true
+    },
+    {
+      "source": "/cleanup/?",
+      "destination": "/ar/cleanup/",
+      "permanent": true
+    },
+    {
+      "source": "/me-as-a-madona/?",
+      "destination": "/ar/me-as-a-madona/",
+      "permanent": true
+    },
+    {
+      "source": "/red-stream/?",
+      "destination": "/ar/red-stream/",
+      "permanent": true
+    },
+    {
+      "source": "/maybe-once/?",
+      "destination": "/ar/maybe-once/",
+      "permanent": true
+    },
+    {
+      "source": "/small-town-boy/?",
+      "destination": "/ar/small-town-boy/",
+      "permanent": true
+    },
+    {
+      "source": "/bohemian-forest-i/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/she-looked-like-an-angel/?",
+      "destination": "/ar/she-looked-like-an-angel/",
+      "permanent": true
+    },
+    {
+      "source": "/the-one-that-cannot-be-found-sleeper/?",
+      "destination": "/ar/the-one-that-cannot-be-found-sleeper/",
+      "permanent": true
+    },
+    {
+      "source": "/we-are-here-or-not/?",
+      "destination": "/ar/we-are-here-or-not/",
+      "permanent": true
+    },
+    {
+      "source": "/this-must-be-the-place/?",
+      "destination": "/ar/this-must-be-the-place/",
+      "permanent": true
+    },
+    {
+      "source": "/travelling-boy/?",
+      "destination": "/ar/travelling-boy/",
+      "permanent": true
+    },
+    {
+      "source": "/broken-starfish/?",
+      "destination": "/ar/broken-starfish/",
+      "permanent": true
+    },
+    {
+      "source": "/a-midsummer-nights-dream/?",
+      "destination": "/ar/a-midsummer-nights-dream/",
+      "permanent": true
+    },
+    {
+      "source": "/ritual/?",
+      "destination": "/ar/ritual/",
+      "permanent": true
+    },
+    {
+      "source": "/finding-martin/?",
+      "destination": "/ar/finding-martin/",
+      "permanent": true
+    },
+    {
+      "source": "/mistral/?",
+      "destination": "/ar/mistral/",
+      "permanent": true
+    },
+    {
+      "source": "/over-and-over/?",
+      "destination": "/ar/over-and-over/",
+      "permanent": true
+    },
+    {
+      "source": "/liberty-ball/?",
+      "destination": "/ar/liberty-ball/",
+      "permanent": true
+    },
+    {
+      "source": "/get-out-of-your-own-way/?",
+      "destination": "/ar/get-out-of-your-own-way/",
+      "permanent": true
+    },
+    {
+      "source": "/reunion/?",
+      "destination": "/ar/reunion/",
+      "permanent": true
+    },
+    {
+      "source": "/everything-is-new/?",
+      "destination": "/ar/everything-is-new/",
+      "permanent": true
+    },
+    {
+      "source": "/travelling-mood/?",
+      "destination": "/ar/travelling-mood/",
+      "permanent": true
+    },
+    {
+      "source": "/walker/?",
+      "destination": "/ar/walker/",
+      "permanent": true
+    },
+    {
+      "source": "/hot-summer/?",
+      "destination": "/ar/hot-summer/",
+      "permanent": true
+    },
+    {
+      "source": "/fish-is-fish/?",
+      "destination": "/ar/fish-is-fish/",
+      "permanent": true
+    },
+    {
+      "source": "/blue-freedom/?",
+      "destination": "/ar/blue-freedom/",
+      "permanent": true
+    },
+    {
+      "source": "/pink/?",
+      "destination": "/ar/pink/",
+      "permanent": true
+    },
+    {
+      "source": "/behind-the-tree/?",
+      "destination": "/ar/behind-the-tree/",
+      "permanent": true
+    },
+    {
+      "source": "/the-silence/?",
+      "destination": "/ar/the-silence/",
+      "permanent": true
+    },
+    {
+      "source": "/such-a-beautiful-boy/?",
+      "destination": "/ar/such-a-beautiful-boy/",
+      "permanent": true
+    },
+    {
+      "source": "/animal-inside-me/?",
+      "destination": "/ar/animal-inside-me/",
+      "permanent": true
+    },
+    {
+      "source": "/thousand-eyes/?",
+      "destination": "/ar/thousand-eyes/",
+      "permanent": true
+    },
+    {
+      "source": "/dream-about-attersee/?",
+      "destination": "/ar/dream-about-attersee/",
+      "permanent": true
+    },
+    {
+      "source": "/riverside-around-me/?",
+      "destination": "/ar/riverside-around-me/",
+      "permanent": true
+    },
+    {
+      "source": "/too-big-fish/?",
+      "destination": "/ar/too-big-fish/",
+      "permanent": true
+    },
+    {
+      "source": "/who-killed-tom/?",
+      "destination": "/ar/who-killed-tom/",
+      "permanent": true
+    },
+    {
+      "source": "/forest-family/?",
+      "destination": "/ar/forest-family/",
+      "permanent": true
+    },
+    {
+      "source": "/tomorrow-morning/?",
+      "destination": "/ar/tomorrow-morning/",
+      "permanent": true
+    },
+    {
+      "source": "/cinema-ii/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/attersee-iii/?",
+      "destination": "/ar/attersee-iii/",
+      "permanent": true
+    },
+    {
+      "source": "/sound-of-silence/?",
+      "destination": "/ar/sound-of-silence/",
+      "permanent": true
+    },
+    {
+      "source": "/little-things/?",
+      "destination": "/ar/little-things/",
+      "permanent": true
+    },
+    {
+      "source": "/butterflies/?",
+      "destination": "/ar/butterflies/",
+      "permanent": true
+    },
+    {
+      "source": "/hunter/?",
+      "destination": "/ar/hunter/",
+      "permanent": true
+    },
+    {
+      "source": "/attersee-ii/?",
+      "destination": "/ar/attersee-ii/",
+      "permanent": true
+    },
+    {
+      "source": "/blue-september/?",
+      "destination": "/ar/blue-september/",
+      "permanent": true
+    },
+    {
+      "source": "/shyness-is-a-beautiful-girl/?",
+      "destination": "/ar/shyness-is-a-beautiful-girl/",
+      "permanent": true
+    },
+    {
+      "source": "/afternoon-siesta/?",
+      "destination": "/ar/afternoon-siesta/",
+      "permanent": true
+    },
+    {
+      "source": "/the-place-i-met/?",
+      "destination": "/ar/the-place-i-met/",
+      "permanent": true
+    },
+    {
+      "source": "/open-story/?",
+      "destination": "/ar/open-story/",
+      "permanent": true
+    },
+    {
+      "source": "/attersee/?",
+      "destination": "/ar/attersee/",
+      "permanent": true
+    },
+    {
+      "source": "/bird-song/?",
+      "destination": "/ar/bird-song/",
+      "permanent": true
+    },
+    {
+      "source": "/bird-lake/?",
+      "destination": "/ar/bird-lake/",
+      "permanent": true
+    },
+    {
+      "source": "/bath/?",
+      "destination": "/ar/bath/",
+      "permanent": true
+    },
+    {
+      "source": "/drop-by-drop/?",
+      "destination": "/ar/drop-by-drop/",
+      "permanent": true
+    },
+    {
+      "source": "/birds/?",
+      "destination": "/ar/birds/",
+      "permanent": true
+    },
+    {
+      "source": "/untitled/?",
+      "destination": "/ar/untitled/",
+      "permanent": true
+    },
+    {
+      "source": "/i-should-go-there/?",
+      "destination": "/ar/i-should-go-there/",
+      "permanent": true
+    },
+    {
+      "source": "/episode/?",
+      "destination": "/ar/episode/",
+      "permanent": true
+    },
+    {
+      "source": "/inthe-middle-of-somewhere/?",
+      "destination": "/ar/in-the-middle-of-somewhere/",
+      "permanent": true
+    },
+    {
+      "source": "/i-am-in-love-with-your-brother/?",
+      "destination": "/ar/i-am-in-love-with-your-brother/",
+      "permanent": true
+    },
+    {
+      "source": "/721/?",
+      "destination": "/ar/elastic-world/",
+      "permanent": true
+    },
+    {
+      "source": "/rainbow-rainbow-jpg/?",
+      "destination": "/ar/rainbow-rainbow-jpg/",
+      "permanent": true
+    },
+    {
+      "source": "/2016-white-river/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/2016-tree-of-life/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/576/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/2016-ready/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/2016-morning/?",
+      "destination": "/ar/2016-morning/",
+      "permanent": true
+    },
+    {
+      "source": "/2016-lake/?",
+      "destination": "/ar/2016-lake/",
+      "permanent": true
+    },
+    {
+      "source": "/2015-highway/?",
+      "destination": "/ar/2015-highway/",
+      "permanent": true
+    },
+    {
+      "source": "/2015-in-the-studio/?",
+      "destination": "/ar/2015-in-the-studio/",
+      "permanent": true
+    },
+    {
+      "source": "/2015-a-lot-of-things-in-the-graden/?",
+      "destination": "/ar/2015-a-lot-of-things-in-the-graden/",
+      "permanent": true
+    },
+    {
+      "source": "/2015-in-the-middle-of-somewhere/?",
+      "destination": "/ar/2015-in-the-middle-of-somewhere/",
+      "permanent": true
+    },
+    {
+      "source": "/2014-boys/?",
+      "destination": "/ar/2014-boys/",
+      "permanent": true
+    },
+    {
+      "source": "/2015-dancing-in-the-garden/?",
+      "destination": "/ar/2015-dancing-in-the-garden/",
+      "permanent": true
+    },
+    {
+      "source": "/534/?",
+      "destination": "/ar/in-the-garden/",
+      "permanent": true
+    },
+    {
+      "source": "/528/?",
+      "destination": "/ar/mercy-boat/",
+      "permanent": true
+    },
+    {
+      "source": "/2014-at-that-time/?",
+      "destination": "/ar/2014-at-that-time/",
+      "permanent": true
+    },
+    {
+      "source": "/2014-veil-and-mountain/?",
+      "destination": "/ar/2014-veil-and-mountain/",
+      "permanent": true
+    },
+    {
+      "source": "/514/?",
+      "destination": "/ar/wind/",
+      "permanent": true
+    },
+    {
+      "source": "/2015-private-view/?",
+      "destination": "/ar/2015-private-view/",
+      "permanent": true
+    },
+    {
+      "source": "/503/?",
+      "destination": "/ar/wave/",
+      "permanent": true
+    },
+    {
+      "source": "/436/?",
+      "destination": "/ar/god-in-the-house/",
+      "permanent": true
+    },
+    {
+      "source": "/2016-autumn-bath/?",
+      "destination": "/ar/2016-autumn-bath/",
+      "permanent": true
+    },
+    {
+      "source": "/427/?",
+      "destination": "/ar/around-us/",
+      "permanent": true
+    },
+    {
+      "source": "/421/?",
+      "destination": "/ar/angels/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-there-is-snow-for-a-long-time-in-the-valley/?",
+      "destination": "/ar/2013-there-is-snow-for-a-long-time-in-the-valley/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-this-must-be-the-place/?",
+      "destination": "/ar/2013-this-must-be-the-place/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-thickets/?",
+      "destination": "/ar/2013-thickets/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-there-is-always-snow-in-the-valley/?",
+      "destination": "/ar/2013-there-is-always-snow-in-the-valley/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-stand-up-daddy/?",
+      "destination": "/ar/2013-stand-up-daddy/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-road-from-the-forest/?",
+      "destination": "/ar/2013-road-from-the-forest/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-night-watch/?",
+      "destination": "/ar/2013-night-watch/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-invisible-accident/?",
+      "destination": "/ar/2013-invisible-accident/",
+      "permanent": true
+    },
+    {
+      "source": "/2013-balcony-scene/?",
+      "destination": "/ar/2013-balcony-scene/",
+      "permanent": true
+    },
+    {
+      "source": "/2012-waiting-for-rain/?",
+      "destination": "/ar/2012-waiting-for-rain/",
+      "permanent": true
+    },
+    {
+      "source": "/2012-over-there-outside/?",
+      "destination": "/ar/2012-over-there-outside/",
+      "permanent": true
+    },
+    {
+      "source": "/2012-brothers/?",
+      "destination": "/ar/2012-brothers/",
+      "permanent": true
+    },
+    {
+      "source": "/2012-black-and-white/?",
+      "destination": "/ar/2012-black-and-white/",
+      "permanent": true
+    },
+    {
+      "source": "/2012-before/?",
+      "destination": "/ar/2012-before/",
+      "permanent": true
+    },
+    {
+      "source": "/2012-at-dusk/?",
+      "destination": "/ar/2012-at-dusk/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-white-highway/?",
+      "destination": "/ar/2011-white-highway/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-white-bridge/?",
+      "destination": "/ar/2011-white-bridge/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-waiting/?",
+      "destination": "/ar/2011-waiting/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-underworld/?",
+      "destination": "/ar/2011-underworld/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-tree-of-life/?",
+      "destination": "/ar/2011-tree-of-life/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-standing-on-legs/?",
+      "destination": "/ar/2011-standing-on-legs/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-somewhere-in-front-of-london/?",
+      "destination": "/ar/2011-somewhere-in-front-of-london/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-someone-is-living-there/?",
+      "destination": "/ar/2011-someone-is-living-there/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-silos-towers/?",
+      "destination": "/ar/2011-silos-towers/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-school/?",
+      "destination": "/ar/2011-school/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-reflection/?",
+      "destination": "/ar/2011-reflection/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-house-to-hire/?",
+      "destination": "/ar/2011-house-to-hire/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-house-beside-a-river/?",
+      "destination": "/ar/2011-house-beside-a-river/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-fireplace/?",
+      "destination": "/ar/2011-fireplace/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-downpour/?",
+      "destination": "/ar/2011-downpour/",
+      "permanent": true
+    },
+    {
+      "source": "/2011-beam/?",
+      "destination": "/ar/2011-beam/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-trees-you-can-see-them-everywhere/?",
+      "destination": "/ar/2010-trees-you-can-see-them-everywhere/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-the-view-through/?",
+      "destination": "/ar/2010-the-view-through/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-the-train/?",
+      "destination": "/ar/2010-the-train/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-seekers/?",
+      "destination": "/ar/2010-seekers/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-road/?",
+      "destination": "/ar/2010-road/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-message/?",
+      "destination": "/ar/2010-message/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-inside-and-outside/?",
+      "destination": "/ar/2010-inside-and-outside/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-highway/?",
+      "destination": "/ar/2010-highway/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-footprints/?",
+      "destination": "/ar/2010-footprints/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-brighton-dreamed-of-forest/?",
+      "destination": "/ar/2010-brighton-dreamed-of-forest/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-beside-a-cottage/?",
+      "destination": "/ar/2010-beside-a-cottage/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-behind-a-house/?",
+      "destination": "/ar/2010-behind-a-house/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-always-something-will-happen-on-a-journey/?",
+      "destination": "/ar/2010-always-something-will-happen-on-a-journey/",
+      "permanent": true
+    },
+    {
+      "source": "/2010-accident/?",
+      "destination": "/ar/2010-accident/",
+      "permanent": true
+    },
+    {
+      "source": "/2009-yellow-forest/?",
+      "destination": "/ar/2009-yellow-forest/",
+      "permanent": true
+    },
+    {
+      "source": "/2009-voyage/?",
+      "destination": "/ar/2009-voyage/",
+      "permanent": true
+    },
+    {
+      "source": "/2009-under-a-lamp/?",
+      "destination": "/ar/2009-under-a-lamp/",
+      "permanent": true
+    },
+    {
+      "source": "/2009-on-the-edge/?",
+      "destination": "/ar/2009-on-the-edge/",
+      "permanent": true
+    },
+    {
+      "source": "/2009-on-the-balcony-invisible-accident/?",
+      "destination": "/ar/2009-on-the-balcony-invisible-accident/",
+      "permanent": true
+    },
+    {
+      "source": "/stejny/?",
+      "destination": "/ar/museum/",
+      "permanent": true
+    },
+    {
+      "source": "/slide/?",
+      "destination": "/ar/cage/",
+      "permanent": true
+    },
+    {
+      "source": "/hack/?",
+      "destination": "/#works",
+      "permanent": true
+    },
+    {
+      "source": "/telefon/?",
+      "destination": "/ar/and-dark-became/",
+      "permanent": true
+    },
+    {
+      "source": "/deka/?",
+      "destination": "/ar/the-place-farm-house/",
+      "permanent": true
+    },
+    {
+      "source": "/weekend-house/?",
+      "destination": "/ar/weekend-house/",
+      "permanent": true
     }
   ]
 }
