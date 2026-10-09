@@ -29,15 +29,15 @@ export default function BioPage() {
           <div className="bio-content">
             <img className="bio-portrait" src="/assets/jiri-portrait.png" alt="Jiri Hauschka" />
 
-            <blockquote className="bio-quote-main">
-              "I am like a fascinated pilgrim and painting is the best way, how to show, what the world of my pilgrimage looks like."
-            </blockquote>
-            <p className="bio-quote-author">— Jiri Hauschka</p>
-
             <div className="bio-facts-inline">
               <p><strong>1965</strong> Born, Šumperk, Northern Moravia, Czechia</p>
               <p>Currently lives and works in Prague</p>
             </div>
+
+            <blockquote className="bio-quote-main">
+              "I am like a fascinated pilgrim and painting is the best way, how to show, what the world of my pilgrimage looks like."
+            </blockquote>
+            <p className="bio-quote-author">— Jiri Hauschka</p>
 
             <blockquote className="bio-quote">
               <p>"Jiri Hauschka is one of the most interesting artists to have emerged in the Czech Republic during the quarter of century that has followed the fall of the Communist regime."</p>
