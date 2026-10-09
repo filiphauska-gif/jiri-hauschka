@@ -1,4 +1,7 @@
 import './globals.css';
+import Script from 'next/script';
+
+const GA_ID = 'G-77VNHD7BXJ';
 
 export const metadata = {
   title: 'Jiri Hauschka — Czech Painter',
@@ -37,7 +40,17 @@ export default function RootLayout({ children }) {
         <meta name="robots" content="index, follow" />
         <link rel="canonical" href="https://preview.jirihauschka.com" />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="ga-init" strategy="afterInteractive">
+          {`window.dataLayer = window.dataLayer || []; function gtag(){dataLayer.push(arguments);} gtag('js', new Date()); gtag('config', '${GA_ID}');`}
+        </Script>
+      </body>
     </html>
   );
 }
+
