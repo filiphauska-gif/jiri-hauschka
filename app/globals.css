@@ -178,19 +178,18 @@ section{padding:80px 0}
 /* Bio page */
 .bio-page{background:var(--bg);min-height:100vh;padding:108px 0 60px}
 .bio-page h1{font-size:28px;font-weight:600;margin:0 0 40px}
-.bio-hero{display:grid;grid-template-columns:280px 1fr;gap:40px;margin-bottom:48px;align-items:start}
-.bio-portrait{width:100%;border-radius:var(--radius);display:block}
+.bio-content{max-width:720px}
+.bio-portrait{width:280px;max-width:100%;border-radius:var(--radius);display:block;margin:0 0 32px}
+.bio-content p{font-size:15px;line-height:1.7;color:var(--ink);margin:0 0 18px}
 .bio-quote-main{font-size:19px;line-height:1.5;font-style:italic;color:var(--ink);margin:0 0 8px;border:none;padding:0}
-.bio-quote-author{font-size:14px;color:var(--muted);margin:0 0 24px}
-.bio-facts-inline p{font-size:15px;line-height:1.6;margin:0 0 4px;color:var(--ink)}
+p.bio-quote-author{font-size:14px;color:var(--muted);margin:0 0 24px}
+.bio-content .bio-facts-inline p{font-size:15px;line-height:1.6;margin:0 0 4px}
 .bio-facts-inline strong{font-weight:600}
-.bio-quote{background:var(--card);border-radius:var(--radius);padding:28px 32px;margin:0 0 40px}
-.bio-quote p{font-size:17px;line-height:1.6;font-style:italic;margin:0 0 12px;color:var(--ink)}
+.bio-content .bio-quote{margin:32px 0 40px;border:none;padding:0}
+.bio-content .bio-quote p{font-size:17px;line-height:1.6;font-style:italic;margin:0 0 12px}
 .bio-quote cite{font-size:14px;color:var(--muted);font-style:normal}
-.bio-text{max-width:720px}
-.bio-text h2{font-size:20px;font-weight:600;margin:0 0 20px}
-.bio-text p{font-size:15px;line-height:1.7;color:var(--ink);margin:0 0 18px}
-.bio-text-author{font-size:14px;color:var(--muted);font-style:italic}
+.bio-content h2{font-size:20px;font-weight:600;margin:0 0 20px}
+p.bio-text-author{font-size:14px;color:var(--muted);font-style:italic}
 .bio-read-more{margin-top:20px}
 
 /* Responsive */
@@ -219,9 +218,7 @@ section{padding:80px 0}
   .insta-feed-grid{grid-template-columns:repeat(3,1fr);max-width:100%}
   .contact-email{font-size:20px}
   .card,.intro-card{padding:28px}
-  .bio-hero{grid-template-columns:1fr;gap:24px}
-  .bio-portrait{max-width:240px}
-  .bio-quote{padding:20px 22px}
+  .bio-portrait{max-width:220px}
   .nav .links{display:none}
   .hamburger{display:block;z-index:30}
   .links-open{display:flex!important;flex-direction:column;position:fixed;top:0;left:0;right:0;padding:68px 22px 22px;background:rgba(0,0,0,.95);gap:16px;font-size:16px;z-index:25;backdrop-filter:blur(20px)}
