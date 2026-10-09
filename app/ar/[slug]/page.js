@@ -21,7 +21,7 @@ export default async function ArtworkArPage({ params }) {
         <div className="nav-inner">
           <Link href="/" className="brand">Jiri Hauschka</Link>
           <div className="links">
-            <Link href="/#works">Works</Link>
+            <Link href="/#works">Paintings</Link>
             <Link href="/bio">Bio</Link>
             <Link href="/exhibitions">Exhibitions</Link>
             <span className="nav-active">AR</span>

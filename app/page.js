@@ -85,7 +85,7 @@ export default function HomePage() {
             <span className={`hamburger-line ${menuOpen ? 'open' : ''}`}></span>
           </button>
           <div className={`links${menuOpen ? ' links-open' : ''}`}>
-            <a href="#works" onClick={() => setMenuOpen(false)}>Works</a>
+            <a href="#works" onClick={() => setMenuOpen(false)}>Paintings</a>
             <Link href="/bio" onClick={() => setMenuOpen(false)}>Bio</Link>
             <Link href="/exhibitions" onClick={() => setMenuOpen(false)}>Exhibitions</Link>
             <a href="#ar" onClick={() => setMenuOpen(false)}><span className="ar-short">AR</span><span className="ar-long">Augmented reality</span></a>
@@ -101,7 +101,7 @@ export default function HomePage() {
             <h1>Jiri<br />Hauschka</h1>
             <p className="lead">Paintings between abstraction, figuration and magical realism.</p>
             <div className="actions">
-              <a className="btn primary" href="#works">View works</a>
+              <a className="btn primary" href="#works">View paintings</a>
             </div>
           </div>
           <figure className="hero-art">
@@ -125,10 +125,9 @@ export default function HomePage() {
         <div className="wrap">
           <div className="section-head">
             <div>
-              <div className="kicker">Works</div>
               <h2 className="title">Paintings.</h2>
             </div>
-            <p className="small-copy">{artworks.length} works</p>
+            <p className="small-copy">{artworks.length} paintings</p>
           </div>
           <div className="works-grid">
             {visible.map((artwork) => (

@@ -13,7 +13,7 @@ export default function BioPage() {
         <div className="nav-inner">
           <Link href="/" className="brand">Jiri Hauschka</Link>
           <div className="links">
-            <Link href="/#works">Works</Link>
+            <Link href="/#works">Paintings</Link>
             <span className="nav-active">Bio</span>
             <Link href="/exhibitions">Exhibitions</Link>
             <Link href="/#ar">AR</Link>
