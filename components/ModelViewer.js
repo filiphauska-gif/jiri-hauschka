@@ -13,10 +13,21 @@ export default function ModelViewer({ artwork }) {
     const ua = navigator.userAgent;
     const ios = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
     const android = /Android/i.test(ua);
+    const chromium = /Chrome\/|SamsungBrowser|EdgA|OPR\//.test(ua) && !/Firefox|FxiOS/i.test(ua);
     // Facebook, Messenger, Instagram in-app browsers
     const inapp = /FBAN|FBAV|FB_IAB|FBIOS|Instagram|Messenger/i.test(ua);
     setIsInApp(inapp);
-    setPlat({ ios, android, mobile: ios || android });
+    setPlat({ ios, android, chromium, mobile: ios || android });
+
+    // Catch AR launch failures reported by model-viewer
+    const mv = mvRef.current;
+    if (mv) {
+      const onArStatus = (e) => {
+        if (e.detail && e.detail.status === 'failed') setArFailed(true);
+      };
+      mv.addEventListener('ar-status', onArStatus);
+      return () => mv.removeEventListener('ar-status', onArStatus);
+    }
   }, []);
 
   const handleAR = async () => {
@@ -96,11 +107,18 @@ export default function ModelViewer({ artwork }) {
             {plat.ios
               ? 'AR works only in Safari on iPhone. Open this page in Safari to try it.'
               : plat.android
-                ? 'AR needs Chrome (with ARCore) on Android.'
+                ? 'AR could not start. Your phone may be missing \u201CGoogle Play Services for AR\u201D (ARCore).'
                 : "AR isn't available in this browser."}
           </p>
-          {plat.ios && <button className="inapp-btn" onClick={openInSafari}>Open in Safari</button>}
-          {plat.android && <button className="inapp-btn" onClick={openInChrome}>Open in Chrome</button>}
+          <div className="inapp-actions">
+            {plat.ios && <button className="inapp-btn" onClick={openInSafari}>Open in Safari</button>}
+            {plat.android && (
+              <>
+                <a className="inapp-btn" href="https://play.google.com/store/apps/details?id=com.google.ar.core" target="_blank" rel="noopener">Get ARCore</a>
+                {!plat.chromium && <button className="inapp-btn" onClick={openInChrome}>Open in Chrome</button>}
+              </>
+            )}
+          </div>
         </div>
       )}
 
